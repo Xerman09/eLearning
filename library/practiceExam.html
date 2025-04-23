@@ -11,6 +11,7 @@
     <style>
         :root{
             --shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+            --firstcolor: #1A2D42;
         }
         html,
         body,
@@ -48,13 +49,12 @@
             box-shadow: var(--shadow);
             width: 100%;
             max-width: 700px;
-            margin-top: 2rem;
+            margin: 2rem 0 3rem;
         }
 
         .question-wrapper {
             background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 10px;
+            border: 1px solid var(--firstcolor);
             padding: 1.5rem;
             margin-bottom: 2rem;
             box-shadow: var(--shadow);
@@ -64,10 +64,16 @@
             font-size: 1.25rem;
             font-weight: bold;
             margin-bottom: 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .question-header .topic{
+            text-align: right;
         }
 
         .question-text {
             margin: 1rem 0;
+            font-size: 1.1rem;
         }
 
         .question-image {
@@ -89,10 +95,11 @@
             cursor: pointer;
             transition: background 0.3s, border 0.3s;
             border: 2px solid transparent;
+            box-shadow: var(--shadow);
         }
 
         .choice.selected {
-            border-color: #007bff;
+            border-color: var(--firstcolor);
             background-color: #e0ecff;
         }
 
@@ -118,10 +125,43 @@
             margin-top: 1rem;
             padding: 0.75rem 1rem;
             border: none;
-            background: darkgreen;
+            background: #1A2D42;
             color: white;
             border-radius: 6px;
             cursor: pointer;
+        }
+    </style>
+    <style>
+        .pagination{
+            text-align: center;
+            margin: 1rem 0;
+            height: auto;
+            width: 100%;
+        }
+        .pagination button{
+            margin: auto;
+            border: 1px solid #1A2D42;
+            padding: 0.5rem 1rem;
+            margin: 0 1rem;
+            background: #1A2D42;
+            color: white;
+            font-weight: 500;
+        }
+        .pagination span{
+            position: absolute;
+            margin-top: 0.5rem;
+        }
+        
+        .pagination button:hover{
+            background: white;
+            color: #1A2D42;
+            cursor: pointer;
+        }
+        .pagination .previous{
+            float: left;
+        }
+        .pagination .next{
+            float: right;
         }
     </style>
 </head>
@@ -172,13 +212,16 @@
         <header class="w3-container" style="padding-top:22px">
             <h5 style="font-size: 30px; text-align:center;">
                 <b id="subject-title">
-                    CIVIL SERVICE PRACTICE EXAM
+                    
                 </b>
             </h5>
         </header>
         <div class="quiz-box">
+            <div id="pagination-top" style="margin-bottom: 1rem; display: none;"></div>
             <div id="quiz-container"></div>
+            <div id="pagination-bottom" style="margin-top: 1rem;"></div>
         </div>
+        
     </div>
 
     <script>

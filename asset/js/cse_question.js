@@ -1,10 +1,13 @@
 
-const practiceExamInfo = [
-    title = 'Civil Service Practice Exam',
-]
+document.getElementById('subject-title').innerText = 'CIVIL SERVICE PRACTICE EXAM';
+
+const cse_topics = {
+    1 : 'Mathematics',
+}
 const questions = [
     {
         no : 1, 
+        topic: 1,
         type : 'M',
         question : 'Find the sum: 299 + 943 + 398 + 101.',
         choices : {
@@ -18,6 +21,7 @@ const questions = [
     },
     {
         no : 2, 
+        topic: 1,
         type : 'M',
         question : 'If 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 = 55, then 11 + 12 + 13 + 14 + 15 + 16 + 17 + 18 + 19 + 20 = ?',
         choices : {
@@ -31,6 +35,7 @@ const questions = [
     },
     {
         no : 3, 
+        topic: 1,
         type : 'M',
         question : 'If 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 = 55, then 101 + 102 + 103 + 104 + 105 + 106 + 107 + 108 + 109 + 110 = ?',
         choices : {
@@ -42,10 +47,138 @@ const questions = [
         answer : 'a',
         explanation: '',
     },
+    {
+        no : 4, 
+        topic: 1,
+        type : 'M',
+        question : 'Evaluate: {16 - (24 - 8) + 22 x 8 - 8}.',
+        choices : {
+            a : '40',
+            b : '48',
+            c : '64',
+            d : '168',
+        },
+        answer : 'd',
+        explanation: '',
+    },
+    {
+        no : 5, 
+        topic: 1,
+        type : 'M',
+        question : 'If 23 + 28 + 37 + x + 53 = 168 and 23 + 28 + 40 + y + 50 = 120. Find the value of x - y?',
+        choices : {
+            a : '36',
+            b : '48',
+            c : '56',
+            d : '64',
+        },
+        answer : 'b',
+        explanation: '',
+    },
+    {
+        no : 6, 
+        topic: 1,
+        type : 'M',
+        question : 'Find the product: 800 x 125',
+        choices : {
+            a : '925',
+            b : '1 000',
+            c : '10 000',
+            d : '100 000',
+        },
+        answer : 'd',
+        explanation: '',
+    },
+    {
+        no : 7, 
+        topic: 1,
+        type : 'M',
+        question : 'Find the quotient: 8000 / 125',
+        choices : {
+            a : '48',
+            b : '64',
+            c : '80',
+            d : '88',
+        },
+        answer : 'b',
+        explanation: '',
+    },
+    {
+        no : 8, 
+        topic: 1,
+        type : 'M',
+        question : 'What is the remainder when 192 888 is divided by 8?',
+        choices : {
+            a : '0',
+            b : '4',
+            c : '8',
+            d : '24 111',
+        },
+        answer : 'a',
+        explanation: '',
+    },
+    {
+        no : 9, 
+        topic: 1,
+        type : 'M',
+        question : 'Rounding 299 943 to the nearest thousands the result is',
+        choices : {
+            a : '299 940',
+            b : '299 000',
+            c : '299 900',
+            d : '300 000',
+        },
+        answer : 'd',
+        explanation: '',
+    },
+    {
+        no : 10, 
+        topic: 1,
+        type : 'M',
+        question : '398.101 is read as',
+        choices : {
+            a : 'three hundred ninety eight, one hundred one.',
+            b : 'three hundred ninety eight and one hundred one.',
+            c : 'three hundred ninety eight and one hundred',
+            d : 'three hundred ninety eight and one hundred one thousandths',
+        },
+        answer : 'd',
+        explanation: '',
+    },
+    {
+        no : 11, 
+        topic: 1,
+        type : 'M',
+        question : 'A number is divisible by 8 if its last three digit is divisible by 8. Which of the following numbers is divisible by 8?',
+        choices : {
+            a : '9 208',
+            b : '6 236',
+            c : '88 254',
+            d : '8 886',
+        },
+        answer : 'a',
+        explanation: '',
+    },
+    {
+        no : 12, 
+        topic: 1,
+        type : 'M',
+        question : 'A number is divisible by 8 if its last three digit is divisible by 8. Which of the following numbers is divisible by 8?',
+        choices : {
+            a : '9 208',
+            b : '6 236',
+            c : '88 254',
+            d : '8 886',
+        },
+        answer : 'a',
+        explanation: '',
+    },
+
 ]
 /*
     {
         no : , 
+        topic: 1,
         type : 'M',
         question : '',
         choices : {
