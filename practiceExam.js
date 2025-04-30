@@ -2,7 +2,7 @@
 
 const practiceExamArray = [
     {
-      link: "./library/practiceExam.html?subject=cse_question",
+      link: "./library/practiceExam.html?subject=cse_question&topic=0",
       subjectTitle: "Civil Service Exam",
     },
     ];
