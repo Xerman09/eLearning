@@ -1,9 +1,37 @@
 
 document.getElementById('subject-title').innerText = 'CIVIL SERVICE PRACTICE EXAM';
+document.getElementById('sidebar-subject-title').innerText = 'CIVIL SERVICE PRACTICE EXAM';
 
 const cse_topics = {
-    1 : 'Mathematics',
+    0 : 'ALL',
+    1 : 'MATHEMATICS',
+    2 : 'ENGLISH',
+    3 : 'FILIPINO',
+    4 : 'PHILIPPINE CONSTITUTION',
+    5 : 'INDUCTIVE REASONING',
+    6 : 'ABSTRACT REASONING',
 }
+
+const sideBarContainer = document.getElementById("topicLinks"); // The container where links will be inserted
+
+Object.entries(cse_topics).forEach(([key, value]) => {
+  const a = document.createElement("a");
+  a.href = `../library/practiceExam.html?page=1&subject=cse_question&topic=${key}`;
+  a.id = `topic-${key}`;
+  a.className = `w3-bar-item w3-button w3-padding `;
+  a.innerHTML = `<img src="" class="notepadIcon">${value}`;
+  sideBarContainer.appendChild(a);
+});
+
+
+const practiceTest = document.createElement("a");
+practiceTest.href = `../library/quiz.html?page=1&subject=cse_question&topic=`;
+practiceTest.className = `w3-bar-item w3-button w3-padding topic-quiz`;
+practiceTest.innerHTML = `<img src="" class="notepadIcon">PRACTICE QUIZ (FLASHCARD)`;
+sideBarContainer.appendChild(practiceTest);
+
+
+
 const questions = [
     {
         no : 1, 
@@ -173,12 +201,151 @@ const questions = [
         answer : 'a',
         explanation: '',
     },
-
+    {
+        no : 4.1, 
+        topic: 4,
+        type : 'M',
+        question : 'What is the highest law of the land in the Philippines',
+        choices : {
+            a : 'Civil Code',
+            b : 'Philippine Constitution',
+            c : 'Penal Code',
+            d : 'Local Government Code',
+        },
+        answer : 'b',
+        explanation: '',
+    },
+    {
+        no : 4.2, 
+        topic: 4,
+        type : 'M',
+        question : 'How many articles are there in the 1987 Philippine Constitution?',
+        choices : {
+            a : '18',
+            b : '12',
+            c : '21',
+            d : '22',
+        },
+        answer : 'a',
+        explanation: '',
+    },
+    {
+        no : 4.3, 
+        topic: 4,
+        type : 'M',
+        question : 'Which branch of the government is responsible for making laws?',
+        choices : {
+            a : 'Executive',
+            b : 'Legislative',
+            c : 'Judicial',
+            d : 'Electoral',
+        },
+        answer : 'b',
+        explanation: '',
+    },
+    {
+        no : 4.4, 
+        topic: 4,
+        type : 'M',
+        question : 'The power to declare martial law is vested in which official?',
+        choices : {
+            a : 'Senate President',
+            b : 'Chief Justice',
+            c : 'President of the Philippines',
+            d : 'Speaker of the House',
+        },
+        answer : 'c',
+        explanation: '',
+    },
+    {
+        no : 4.5, 
+        topic: 4,
+        type : 'M',
+        question : 'Which article of the Constitution focuses on the Bill of Rights',
+        choices : {
+            a : 'Article II',
+            b : 'Article III',
+            c : 'Article IV',
+            d : 'Article V',
+        },
+        answer : 'a',
+        explanation: '',
+    },
+    {
+        no : 4.6, 
+        topic: 4,
+        type : 'M',
+        question : 'Who is responsible for determining the existence of probable cause for the issuance of a warrant of arrest or search warrant?',
+        choices : {
+            a : 'Lawyer',
+            b : 'Judge',
+            c : 'Fiscal',
+            d : 'Prosecutor',
+        },
+        answer : 'b',
+        explanation: '',
+    },
+    {
+        no : 4.7, 
+        topic: 4,
+        type : 'M',
+        question : 'The Senate shall be composed of how many senators elected at large by voters of the Philippines?',
+        choices : {
+            a : '21',
+            b : '22',
+            c : '23',
+            d : '24',
+        },
+        answer : 'd',
+        explanation: '',
+    },
+    {
+        no : 4.8, 
+        topic: 4,
+        type : 'M',
+        question : 'The term of office of the President and Vice-President of the Philippines shall be up to how many years?',
+        choices : {
+            a : '3 Years',
+            b : '4 Years',
+            c : '5 Years',
+            d : '6 Years',
+        },
+        answer : 'd',
+        explanation: '',
+    },
+    {
+        no : 4.9, 
+        topic: 4,
+        type : 'M',
+        question : 'It states that "no person shall be deprived of life, liberty, or property without due process of law, nor any person be denied the equal protection of the laws.',
+        choices : {
+            a : 'Article VI',
+            b : 'Bill of Rights',
+            c : 'Republic Act',
+            d : 'Court Order',
+        },
+        answer : 'b',
+        explanation: '',
+    },
+    {
+        no : 4.10, 
+        topic: 4,
+        type : 'M',
+        question : 'What are the 3 branches of the Governemnt of the Philippines?',
+        choices : {
+            a : 'Senate, Supreme Court, Congress',
+            b : 'Presidential, Unicameral - Parliamentary, Bicameral -Parliamentary',
+            c : 'Legislative, Executive, Judicial',
+            d : 'The Legislative, The Senate, The Supreme Court',
+        },
+        answer : 'c',
+        explanation: '',
+    },
 ]
 /*
     {
         no : , 
-        topic: 1,
+        topic: 4,
         type : 'M',
         question : '',
         choices : {

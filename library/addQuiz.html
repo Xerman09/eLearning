@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Civil Service Practice Exam</title>
+</head>
+<body>
+  <h1 id="subject-title">CIVIL SERVICE PRACTICE EXAM</h1>
+
+  <form id="questionForm">
+    <h3>Add a New Question</h3>
+    <label>Question No: <input type="number" id="no" required></label><br>
+    <label>Topic (1=Math): <input type="number" id="topic" value="1" required></label><br>
+    <label>Question: <input type="text" id="question" required></label><br>
+    <label>Choice A: <input type="text" id="a" required></label><br>
+    <label>Choice B: <input type="text" id="b" required></label><br>
+    <label>Choice C: <input type="text" id="c" required></label><br>
+    <label>Choice D: <input type="text" id="d" required></label><br>
+    <label>Correct Answer (a/b/c/d): <input type="text" id="answer" required></label><br>
+    <label>Explanation: <textarea id="explanation"></textarea></label><br>
+    <button type="submit">Add Question</button>
+  </form>
+
+  <hr>
+  <h2>Stored Questions</h2>
+  <button onclick="loadQuestions()">Refresh List</button>
+  <div id="questionList"></div>
+
+  <script src="../asset/js/quiz-db.js"></script>
+</body>
+</html>

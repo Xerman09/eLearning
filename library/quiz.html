@@ -9,8 +9,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../asset/css/style.css">
-
     <style>
+        :root {
+            --shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+            --firstcolor: #1A2D42;
+        }
 
         html,
         body,
@@ -36,29 +39,50 @@
         }
     </style>
     <style>
-        .w3-main{
+        .w3-main {
             display: flex;
             align-items: center;
             flex-direction: column;
         }
-        .quiz-box {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            width: 100%;
-            max-width: 700px;
-            margin: 2rem 0 3rem;
+    </style>
+    <style>
+
+        #quiz-container {
+            margin-top: 20px;
         }
 
-        .question-wrapper {
-            background-color: white;
+        .question {
+            margin-bottom: 15px;
+        }
+
+        .choice {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #summary {
+            margin-top: 30px;
+        }
+
+        canvas {
+            max-width: 400px;
+            margin-top: 20px;
+        }
+    </style>
+    <style>
+        .quiz-container{
             border: 1px solid var(--firstcolor);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            padding: 1rem;
+            background: white;
             box-shadow: var(--shadow);
+            width: 90%;
+            max-width: 800px;
+            margin: 1rem;
         }
-
         .question-header {
             font-size: 1.25rem;
             font-weight: bold;
@@ -101,67 +125,16 @@
             border-color: var(--firstcolor);
             background-color: #e0ecff;
         }
+        .choice input[type="radio"] {
+    display: none;
+}
+.score-graph{
+    border: 3px solid var(--firstcolor);
+    padding: 1rem;
+    box-shadow: var(--shadow);
+}
 
-        .choice.correct {
-            background-color: #d4edda;
-            border-color: #28a745;
-        }
 
-        .choice.incorrect {
-            background-color: #f8d7da;
-            border-color: #dc3545;
-        }
-
-        .answer-box {
-            display: none;
-            margin-top: 1rem;
-            padding: 1rem;
-            background-color: #e9f7e9;
-            border-radius: 8px;
-        }
-
-        .check-answer-btn {
-            margin-top: 1rem;
-            padding: 0.75rem 1rem;
-            border: none;
-            background: #1A2D42;
-            color: white;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-    </style>
-    <style>
-        .pagination{
-            text-align: center;
-            margin: 1rem 0;
-            height: auto;
-            width: 100%;
-        }
-        .pagination button{
-            margin: auto;
-            border: 1px solid #1A2D42;
-            padding: 0.5rem 1rem;
-            margin: 0 1rem;
-            background: #1A2D42;
-            color: white;
-            font-weight: 500;
-        }
-        .pagination span{
-            position: absolute;
-            margin-top: 0.5rem;
-        }
-        
-        .pagination button:hover{
-            background: white;
-            color: #1A2D42;
-            cursor: pointer;
-        }
-        .pagination .previous{
-            float: left;
-        }
-        .pagination .next{
-            float: right;
-        }
     </style>
 </head>
 
@@ -208,29 +181,35 @@
         <header class="w3-container" style="padding-top:22px">
             <h5 style="font-size: 30px; text-align:center;">
                 <b id="subject-title">
-                    
+
                 </b>
             </h5>
         </header>
+        <div id="start-container" class="quiz-container">
+            <label for="num-questions">How many questions do you want to answer? (Max: 12)</label><br>
+            <input type="number" id="num-questions" min="1" max="12">
+            <button onclick="startQuiz()">Start Quiz</button>
+        </div>
+
         <style>
-            #warning-message{
-                color: darkred;
-                padding: 1rem;
-                font-weight: 600;
-                
+            .progress-bar{
+                border: 2px solid darkgreen;
+                padding: 0.25rem;
+                border-radius: 10px;
             }
         </style>
-        <div class="quiz-box">
-            <div id="warning-message">
-                If the questions are not loaded. Please refresh the page!
-            </div>
-            <div id="pagination-top" style="margin-bottom: 1rem; display: none;"></div>
-            <div id="quiz-container"></div>
-            <div id="pagination-bottom" style="margin-top: 1rem;"></div>
+        <div id="quiz-container" class="hidden quiz-container">
+            <div class="progress-bar" id="progress-bar"></div>
+            <div id="question-text" class="question"></div>
+            <div id="choices"></div>
+            <button onclick="submitAnswer()">Submit Answer</button>
         </div>
-        
-    </div>
 
+        <div id="summary" class="hidden">
+        </div>
+
+
+    </div>
     <script>
         // Get URL parameters
         const params = new URLSearchParams(window.location.search);
@@ -246,51 +225,9 @@
             document.body.appendChild(script);
 
             const scriptQuiz = document.createElement('script');
-            scriptQuiz.src = `../asset/js/quiz.js`;
+            scriptQuiz.src = `../asset/js/practiceQuiz.js`;
             document.body.appendChild(scriptQuiz);
         }
-    </script>
-    <script>
-        // Get the Sidebar
-        var mySidebar = document.getElementById("mySidebar");
-
-        // Get the DIV with overlay effect
-        var overlayBg = document.getElementById("myOverlay");
-
-        // Toggle between showing and hiding the sidebar, and add overlay effect
-        function w3_open() {
-            if (mySidebar.style.display === 'block') {
-                mySidebar.style.display = 'none';
-                overlayBg.style.display = "none";
-            } else {
-                mySidebar.style.display = 'block';
-                overlayBg.style.display = "block";
-            }
-        }
-
-        // Close the sidebar with the close button
-        function w3_close() {
-            mySidebar.style.display = "none";
-            overlayBg.style.display = "none";
-        }
-        //Displaying icon 
-
-        var notepadIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAQNJREFUSEvtloENgkAMRcsmuoluopOok+gmugluov6kRw44S0t7IUSbkBhp+vp7P0cbWiiahbhkAZ+5yQcR4clj9/kPDyLliZos4BdXuhSKA3bi96qaqiQuWB284e4PAef/5GPBlPC7i5LilogAjwxAtxIYBrlHErNa+9yUQ8U5GF32xjOzoeR2NbiX6ICmCa4HDKNdjYrhYlwy+dGZFc8xXIK4welW0go/sjFdYC2slLdOsGQunKUULsWSuaY+Mm7wN3NVVfx75vortkzA5WoLaJirBuOywOpTI7D6dItF6QLIV9WoBm5EhA+HuOzhJZRjTBFLH6CjFWrqyotSPKqzGPgNNkJkH7l9jyAAAAAASUVORK5CYII=";
-
-        //document.getElementById("notepadIcon").src = notepadIcon;
-        // Select all elements with the class 'notepadIcon'
-        var icons = document.querySelectorAll('.notepadIcon');
-
-        // Loop through each element and change the src attribute
-        icons.forEach(icon => {
-            icon.src = notepadIcon;
-        });
-
-        function tab() {
-            return "&emsp;";
-        }
-        window.onload = tab;
-        var tab = "&emsp;";
     </script>
 </body>
 

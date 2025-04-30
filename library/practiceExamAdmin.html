@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../asset/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 
     <style>
 
@@ -162,6 +164,19 @@
         .pagination .next{
             float: right;
         }
+        .download-btn {
+  margin-top: 10px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.download-btn:hover {
+  background-color: #45a049;
+}
+
     </style>
 </head>
 
@@ -190,9 +205,11 @@
         </div>
         <hr>
         <div class="w3-container">
-            <h5 id="sidebar-subject-title"></h5>
+            <h5 id="sidebar-subject-title">Differential Equation</h5>
         </div>
-        <div class="w3-bar-block" id="topicLinks">
+        <div class="w3-bar-block">
+            <a href="#" class="w3-bar-item w3-button w3-padding w3-blue"><img src="" class="notepadIcon">  Subjects</a>
+            <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>  Updates</a>
         </div>
     </nav>
 
@@ -246,7 +263,7 @@
             document.body.appendChild(script);
 
             const scriptQuiz = document.createElement('script');
-            scriptQuiz.src = `../asset/js/quiz.js`;
+            scriptQuiz.src = `../asset/js/quizAdmin.js`;
             document.body.appendChild(scriptQuiz);
         }
     </script>

@@ -12,22 +12,10 @@ const subjectCode = params.get('subject');
 const topicCode = params.get('topic');
 
 console.log(topicCode);
-let filteredQuestions;
-let topicId = '';
-if (topicCode == '' || topicCode == 0) {
-  filteredQuestions = questions;
-  topicId = 'topic-0';
-} else {
-  // Filter questions by topic
-  filteredQuestions = questions.filter(q => !topicCode || q.topic == topicCode);
-  topicId = `topic-${topicCode}`;
-}
-console.log(topicId);
-document.getElementById(topicId).style.background = 'var(--firstcolor)';
-document.getElementById(topicId).style.color = 'white';
 
-
-
+// Filter questions by topic
+const filteredQuestions = questions.filter(q => !topicCode || q.topic == topicCode);
+console.log(filteredQuestions);
 
 // Pagination settings
 const questionsPerPage = 10;
@@ -70,10 +58,10 @@ function navigatePage(page) {
 
 // Render single question
 function renderQuestion(q, index) {
-
-  index = (currentPage*10)-10 + index;
+  index = (currentPage * 10) - 10 + index;
   const wrapper = document.createElement('div');
   wrapper.classList.add('question-wrapper');
+  wrapper.style.position = 'relative'; // ensure positioning for hiding elements
 
   // Header
   const header = document.createElement('div');
@@ -81,7 +69,7 @@ function renderQuestion(q, index) {
 
   const questionNo = document.createElement('div');
   questionNo.classList.add('questionNo');
-  questionNo.textContent = `Question ${index + 1}`; // ← Use index for numbering
+  questionNo.textContent = `Question ${index + 1}`;
   header.appendChild(questionNo);
 
   const topic = document.createElement('div');
@@ -98,7 +86,6 @@ function renderQuestion(q, index) {
 
   const answerBox = document.createElement('div');
   answerBox.className = 'answer-box';
-
 
   let checkBtn;
 
@@ -156,6 +143,35 @@ function renderQuestion(q, index) {
     wrapper.appendChild(answerBox);
   }
 
+  // ========== DOWNLOAD BUTTON ==========
+  const downloadBtn = document.createElement('button');
+  downloadBtn.className = 'download-btn';
+  downloadBtn.textContent = 'Download as Image';
+
+  downloadBtn.addEventListener('click', () => {
+    // Temporarily hide the button
+    downloadBtn.style.display = 'none';
+
+    html2canvas(wrapper, {
+      backgroundColor: null,
+      scale: 2
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = `question-${index + 1}.png`;
+      link.href = canvas.toDataURL('image/png');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Restore the button after download
+      downloadBtn.style.display = 'inline-block';
+    }).catch(err => {
+      console.error('Image download failed:', err);
+      downloadBtn.style.display = 'inline-block';
+    });
+  });
+
+  wrapper.appendChild(downloadBtn);
   container.appendChild(wrapper);
 }
 

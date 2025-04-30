@@ -1,132 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quiz Website</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f2f4f7;
-      margin: 0;
-      padding: 2rem;
-      display: flex;
-      justify-content: center;
-    }
-
-    .quiz-box {
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 700px;
-    }
-
-    .question-wrapper {
-      background-color: #ffffff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .question-header {
-      font-size: 1.25rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
-    }
-
-    .question-text {
-      margin: 1rem 0;
-    }
-
-    .question-image {
-      max-width: 100%;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-
-    .choices {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .choice {
-      padding: 0.75rem 1rem;
-      background: #f0f2f5;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s, border 0.3s;
-      border: 2px solid transparent;
-    }
-
-    .choice.selected {
-      border-color: #007bff;
-      background-color: #e0ecff;
-    }
-
-    .choice.correct {
-      background-color: #d4edda;
-      border-color: #28a745;
-    }
-
-    .choice.incorrect {
-      background-color: #f8d7da;
-      border-color: #dc3545;
-    }
-
-    .answer-box {
-      display: none;
-      margin-top: 1rem;
-      padding: 1rem;
-      background-color: #e9f7e9;
-      border-radius: 8px;
-    }
-
-    .check-answer-btn {
-      margin-top: 1rem;
-      padding: 0.75rem 1rem;
-      border: none;
-      background: #007bff;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-  </style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Civil Service Practice Exam</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #quiz-container { margin-top: 20px; }
+        .question { margin-bottom: 15px; }
+        .choice { display: block; margin-bottom: 8px; }
+        .hidden { display: none; }
+        #summary { margin-top: 30px; }
+        canvas { max-width: 400px; margin-top: 20px; }
+    </style>
 </head>
-
 <body>
-  <div class="quiz-box">
-    <div id="quiz-container"></div>
-  </div>
 
-  <script>
-    // Get URL parameters
-    const params = new URLSearchParams(window.location.search);
-  
-    // Get the value of 'subject'
-    const code = params.get('subject');
+<h1 id="subject-title">Loading...</h1>
 
-  
-    // Dynamically create and append the script tag
-    if (code) {
-      const script = document.createElement('script');
-      script.src = `../asset/js/${code}.js`;
-      document.body.appendChild(script);
+<div id="start-container">
+    <label for="num-questions">How many questions do you want to answer? (Max: 12)</label><br>
+    <input type="number" id="num-questions" min="1" max="12">
+    <button onclick="startQuiz()">Start Quiz</button>
+</div>
 
-      const scriptQuiz = document.createElement('script');
-      scriptQuiz.src = `../asset/js/quiz.js`;
-      document.body.appendChild(scriptQuiz);
+<div id="quiz-container" class="hidden">
+    <div id="question-text" class="question"></div>
+    <div id="choices"></div>
+    <button onclick="submitAnswer()">Submit Answer</button>
+</div>
+
+<div id="summary" class="hidden">
+    <canvas id="resultChart"></canvas>
+</div>
+
+<script src="../asset/js/cse_question.js"></script>
+<script>
+    document.getElementById('subject-title').innerText = 'CIVIL SERVICE PRACTICE EXAM';
+
+    let selectedQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let userAnswers = [];
+
+    function startQuiz() {
+        let num = parseInt(document.getElementById('num-questions').value);
+        if (isNaN(num) || num < 1 || num > questions.length) {
+            alert('Please enter a valid number between 1 and 12.');
+            return;
+        }
+        selectedQuestions = [...questions]
+            .sort(() => Math.random() - 0.5)
+            .slice(0, num);
+        document.getElementById('start-container').classList.add('hidden');
+        document.getElementById('quiz-container').classList.remove('hidden');
+        showQuestion();
     }
-  </script>
-  
-  <script>
-   
-  </script>
-</body>
 
+    function showQuestion() {
+      const q = selectedQuestions[currentIndex];
+      document.getElementById('question-text').innerHTML = `<b>Question ${currentIndex + 1}:</b> ${q.question}`;
+      const choicesDiv = document.getElementById('choices');
+      choicesDiv.innerHTML = '';
+
+      // Randomize choices
+      const choicesArray = Object.entries(q.choices).sort(() => Math.random() - 0.5);
+      choicesArray.forEach(([key, value]) => {
+          choicesDiv.innerHTML += `<label class="choice"><input type="radio" name="choice" value="${key}"> ${value}</label>`;
+      });
+  }
+
+
+    function submitAnswer() {
+        const selected = document.querySelector('input[name="choice"]:checked');
+        if (!selected) {
+            alert('Please select an answer.');
+            return;
+        }
+        const q = selectedQuestions[currentIndex];
+        const userChoice = selected.value;
+        userAnswers.push({ question: q.question, userAnswer: userChoice, correctAnswer: q.answer, explanation: q.explanation });
+
+        if (userChoice === q.answer) {
+            score++;
+        }
+
+        currentIndex++;
+        if (currentIndex < selectedQuestions.length) {
+            showQuestion();
+        } else {
+            showSummary();
+        }
+    }
+
+    function showSummary() {
+        document.getElementById('quiz-container').classList.add('hidden');
+        const summaryDiv = document.getElementById('summary');
+        summaryDiv.classList.remove('hidden');
+
+        let resultHTML = `<h2>Quiz Summary</h2>`;
+        resultHTML += `<p>You answered ${score} out of ${selectedQuestions.length} correctly.</p>`;
+        resultHTML += '<ul>';
+
+        userAnswers.forEach((item, index) => {
+            resultHTML += `<li><b>Q${index + 1}:</b> ${item.question}<br>
+            Your Answer: ${item.userAnswer.toUpperCase()} ${item.userAnswer === item.correctAnswer ? '✅' : '❌'}<br>
+            Correct Answer: ${item.correctAnswer.toUpperCase()}<br>
+            ${item.explanation ? `Explanation: ${item.explanation}` : ''}
+            <br><br></li>`;
+        });
+
+        resultHTML += '</ul>';
+        summaryDiv.innerHTML = resultHTML;
+
+        const ctx = document.getElementById('resultChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Correct', 'Incorrect'],
+                datasets: [{
+                    data: [score, selectedQuestions.length - score],
+                    backgroundColor: ['#4caf50', '#f44336'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+</body>
 </html>
