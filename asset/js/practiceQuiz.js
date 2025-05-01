@@ -3,20 +3,65 @@ let selectedQuestions = [];
 let currentIndex = 0;
 let score = 0;
 let userAnswers = [];
+let qlen = questions.length;
+const selectTopic = document.getElementById("select-topic-quiz");
+const startQuizButton = document.getElementById('start-quiz-button');
+const errorMessage = document.getElementById('error-message');
 
-function startQuiz() {
+document.getElementById('num-questions-label').innerText = `How many questions do you want to answer? (Max: ${qlen})`;
+startQuizButton.onclick = () => startQuiz(qlen, 0);
+
+
+
+
+// Populate the <select> options
+Object.entries(cse_topics).forEach(([key, value]) => {
+    const option = document.createElement("option");
+    option.value = key;
+    option.innerText = value;
+    selectTopic.appendChild(option);
+});
+
+// Listen for selection change
+selectTopic.addEventListener("change", function() {
+    const selectedKey = this.value;
+    selectedTopic(selectedKey);
+});
+
+function selectedTopic(key){
+    
+    let qFilter = questions.filter(q => !key || q.topic == key)
+    let qlen = qFilter.length;
+    document.getElementById('num-questions-label').innerText =
+        `How many questions do you want to answer? (Max: ${qlen})`;
+    startQuizButton.onclick = () => startQuiz(qlen, key);
+}
+
+function startQuiz(questionLength, key) {
     let num = parseInt(document.getElementById('num-questions').value);
-    if (isNaN(num) || num < 1 || num > questions.length) {
-        alert('Please enter a valid number between 1 and 12.');
+
+    if (isNaN(num) || num < 1 || num > questionLength) {
+        errorMessage.innerText = `Please enter a valid number between 1 and ${questionLength}.`;
+        errorMessage.style.display = 'block';
+
+        // Hide after 5 seconds
+        setTimeout(() => {
+            errorMessage.style.display = 'none';
+        }, 5000);
+
         return;
     }
-    selectedQuestions = [...questions]
+
+    const filterQuestion = questions.filter(q => !key || q.topic == key);
+    selectedQuestions = [...filterQuestion]
         .sort(() => Math.random() - 0.5)
         .slice(0, num);
+
     document.getElementById('start-container').classList.add('hidden');
     document.getElementById('quiz-container').classList.remove('hidden');
     showQuestion();
 }
+
 
 function showQuestion() {
     const q = selectedQuestions[currentIndex];
@@ -81,15 +126,45 @@ function submitAnswer() {
     }
 }
 
+function getBackgroundColor(percentage) {
+    if (percentage <= 50) {
+        return interpolateColor("#8B0000", "#FFA500", percentage / 50);
+    } else {
+        return interpolateColor("#FFA500", "#006400", (percentage - 50) / 50);
+    }
+}
+
+function interpolateColor(color1, color2, factor) {
+    let c1 = hexToRgb(color1);
+    let c2 = hexToRgb(color2);
+    let result = {
+        r: Math.round(c1.r + (c2.r - c1.r) * factor),
+        g: Math.round(c1.g + (c2.g - c1.g) * factor),
+        b: Math.round(c1.b + (c2.b - c1.b) * factor)
+    };
+    return `rgb(${result.r}, ${result.g}, ${result.b})`;
+}
+
+function hexToRgb(hex) {
+    let bigint = parseInt(hex.slice(1), 16);
+    return {
+        r: (bigint >> 16) & 255,
+        g: (bigint >> 8) & 255,
+        b: bigint & 255
+    };
+}
+
 function showSummary() {
     document.getElementById('quiz-container').classList.add('hidden');
     const summaryDiv = document.getElementById('summary');
     summaryDiv.classList.remove('hidden');
-    const percentage = (score / selectedQuestions.length)*100;
+    const percentage = Math.floor((score / selectedQuestions.length)*100);
 
-    let resultHTML = `<h2>Quiz Summary</h2>`;
-    resultHTML += `<div class='percentage'>${percentage}</div>`;
-    resultHTML += `<div class='score-graph' style='background: linear-gradient(to right, #4caf50 ${percentage}%, #ccc ${percentage}%);'></div>`
+    let resultHTML = `<h2 class="ct-txt">Quiz Summary</h2>`;
+    resultHTML += `<div class='percentage ct-txt'>${percentage}%</div>`;
+    let bgColor = getBackgroundColor(percentage);
+
+    resultHTML += `<div class='score-graph' style='background: linear-gradient(to right, ${bgColor} ${percentage}%, #ccc ${percentage}%);'></div>`;
     resultHTML += `<p>You answered ${score} out of ${selectedQuestions.length} correctly.</p>`;
     resultHTML += '<ul>';
 
@@ -106,3 +181,4 @@ function showSummary() {
 
 
 }
+
