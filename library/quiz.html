@@ -5,6 +5,7 @@
     <title>eLearning</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-adsense-account" content="ca-pub-4839649705386416">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -46,7 +47,6 @@
         }
     </style>
     <style>
-
         #quiz-container {
             margin-top: 20px;
         }
@@ -74,7 +74,7 @@
         }
     </style>
     <style>
-        .quiz-container{
+        .quiz-container {
             border: 1px solid var(--firstcolor);
             padding: 1rem;
             background: white;
@@ -83,6 +83,7 @@
             max-width: 800px;
             margin: 1rem;
         }
+
         .question-header {
             font-size: 1.25rem;
             font-weight: bold;
@@ -90,7 +91,8 @@
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
-        .question-header .topic{
+
+        .question-header .topic {
             text-align: right;
         }
 
@@ -125,16 +127,16 @@
             border-color: var(--firstcolor);
             background-color: #e0ecff;
         }
+
         .choice input[type="radio"] {
-    display: none;
-}
-.score-graph{
-    border: 3px solid var(--firstcolor);
-    padding: 1rem;
-    box-shadow: var(--shadow);
-}
+            display: none;
+        }
 
-
+        .score-graph {
+            border: 3px solid var(--firstcolor);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+        }
     </style>
 </head>
 
@@ -152,7 +154,7 @@
     <!-- Sidebar/menu -->
     <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black"
-        onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+            onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
         <div class="w3-container w3-row">
             <div class="w3-col s4">
                 <img src="" class="w3-circle w3-margin-right" style="width:46px">
@@ -185,14 +187,54 @@
                 </b>
             </h5>
         </header>
-        <div id="start-container" class="quiz-container">
-            <label for="num-questions">How many questions do you want to answer? (Max: 12)</label><br>
+        <style>
+            button:hover {
+                cursor: pointer;
+            }
+
+            .error-message {
+                border: 1px solid darkred;
+                padding: 0.5rem;
+                text-align: center;
+                margin-bottom: 1rem;
+                background: #FFCDD2;
+                display: none;
+            }
+
+            .start-quiz {
+                border: 1px solid var(--firstcolor);
+                padding: 0.5rem;
+                background: white;
+                color: var(--firstcolor);
+                width: 100%;
+            }
+
+            .start-quiz:hover {
+                color: white;
+                background: var(--firstcolor);
+            }
+
+            .bold {
+                font-weight: 600;
+            }
+        </style>
+        <div id="start-container" class="quiz-container ">
+            <div class="error-message" id="error-message">
+
+            </div>
+            <label>SELECT A TOPIC</label>
+            <select id="select-topic-quiz">
+            </select>
+            <br>
+            <label for="num-questions" id="num-questions-label"></label>
+            <br>
             <input type="number" id="num-questions" min="1" max="12">
-            <button onclick="startQuiz()">Start Quiz</button>
+            <button class="start-quiz bold" id="start-quiz-button" onclick="startQuiz()">Start Quiz</button>
+
         </div>
 
         <style>
-            .progress-bar{
+            .progress-bar {
                 border: 2px solid darkgreen;
                 padding: 0.25rem;
                 border-radius: 10px;
@@ -204,9 +246,18 @@
             <div id="choices"></div>
             <button onclick="submitAnswer()">Submit Answer</button>
         </div>
-
-        <div id="summary" class="hidden">
+        <style>
+            .ct-txt{
+                text-align: center;
+            }
+            .percentage{
+                font-size: 1.5rem;
+            }
+        </style>
+        <div id="summary" class="hidden quiz-container">
         </div>
+
+
 
 
     </div>
@@ -228,6 +279,7 @@
             scriptQuiz.src = `../asset/js/practiceQuiz.js`;
             document.body.appendChild(scriptQuiz);
         }
+
     </script>
 </body>
 
