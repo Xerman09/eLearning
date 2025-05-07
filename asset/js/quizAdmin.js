@@ -1,3 +1,4 @@
+const topic = 'CIVIL SERVICE EXAM REVIEWER 2025';
 const listOfType = {
   M: 'Multiple Choice',
   MWI: "Multiple Choice With Image",
@@ -58,6 +59,7 @@ function navigatePage(page) {
 
 // Render single question
 function renderQuestion(q, index) {
+  const topicName = 'CIVIL SERVICE EXAM REVIEWER 2025';
   index = (currentPage * 10) - 10 + index;
   const wrapper = document.createElement('div');
   wrapper.classList.add('question-wrapper');
@@ -66,6 +68,11 @@ function renderQuestion(q, index) {
   // Header
   const header = document.createElement('div');
   header.classList.add('question-header');
+
+  const topicTitle = document.createElement('div');
+  topicTitle.className = 'topic-title';
+  topicTitle.innerText = topicName;
+  wrapper.appendChild(topicTitle);
 
   const questionNo = document.createElement('div');
   questionNo.classList.add('questionNo');
@@ -81,7 +88,7 @@ function renderQuestion(q, index) {
 
   const questionText = document.createElement('div');
   questionText.classList.add('question-text');
-  questionText.textContent = q.question;
+  questionText.innerHTML = q.question;
   wrapper.appendChild(questionText);
 
   const answerBox = document.createElement('div');

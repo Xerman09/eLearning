@@ -10,10 +10,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../asset/css/style.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4839649705386416" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4839649705386416"
+        crossorigin="anonymous"></script>
 
     <style>
-
         html,
         body,
         h1,
@@ -38,11 +38,12 @@
         }
     </style>
     <style>
-        .w3-main{
+        .w3-main {
             display: flex;
             align-items: center;
             flex-direction: column;
         }
+
         .quiz-box {
             background: white;
             padding: 2rem;
@@ -68,7 +69,8 @@
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
-        .question-header .topic{
+
+        .question-header .topic {
             text-align: right;
         }
 
@@ -133,13 +135,14 @@
         }
     </style>
     <style>
-        .pagination{
+        .pagination {
             text-align: center;
             margin: 1rem 0;
             height: auto;
             width: 100%;
         }
-        .pagination button{
+
+        .pagination button {
             margin: auto;
             border: 1px solid #1A2D42;
             padding: 0.5rem 1rem;
@@ -148,20 +151,23 @@
             color: white;
             font-weight: 500;
         }
-        .pagination span{
+
+        .pagination span {
             position: absolute;
             margin-top: 0.5rem;
         }
-        
-        .pagination button:hover{
+
+        .pagination button:hover {
             background: white;
             color: #1A2D42;
             cursor: pointer;
         }
-        .pagination .previous{
+
+        .pagination .previous {
             float: left;
         }
-        .pagination .next{
+
+        .pagination .next {
             float: right;
         }
     </style>
@@ -170,18 +176,18 @@
 <body class="w3-light-grey">
 
     <!-- Top container -->
-    <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
-        <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey"
-            onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-        <span class="w3-bar-item w3-right">Logo</span>
-        <span class="w3-bar-item w3-right"><a href="../index.html">Home</a></span>
-
+    <div id="header-container">
+        <script src="../asset/js/header.js"></script>
+        <script>
+            document.getElementById('header-container').innerHTML = eLearningHeader();
+        </script>
     </div>
+
 
     <!-- Sidebar/menu -->
     <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black"
-        onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+            onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
         <div class="w3-container w3-row">
             <div class="w3-col s4">
                 <img src="" class="w3-circle w3-margin-right" style="width:46px">
@@ -210,16 +216,16 @@
         <header class="w3-container" style="padding-top:22px">
             <h5 style="font-size: 30px; text-align:center;">
                 <b id="subject-title">
-                    
+
                 </b>
             </h5>
         </header>
         <style>
-            #warning-message{
+            #warning-message {
                 color: darkred;
                 padding: 1rem;
                 font-weight: 600;
-                
+
             }
         </style>
         <div class="quiz-box">
@@ -230,9 +236,8 @@
             <div id="quiz-container"></div>
             <div id="pagination-bottom" style="margin-top: 1rem;"></div>
         </div>
-        
-    </div>
 
+    </div>
     <script>
         // Get URL parameters
         const params = new URLSearchParams(window.location.search);

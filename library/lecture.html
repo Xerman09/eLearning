@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4839649705386416" crossorigin="anonymous"></script>
-    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4839649705386416"
+        crossorigin="anonymous"></script>
+
     <style>
         html,
         body,
@@ -34,7 +35,8 @@
         a {
             text-decoration: none;
         }
-        .image-gallery{
+
+        .image-gallery {
             width: 100%;
             padding: 2.5rem;
         }
@@ -44,34 +46,40 @@
 <body class="w3-light-grey">
 
     <!-- Top container -->
-    <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
-        <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey"
-            onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-        <span class="w3-bar-item w3-right">Logo</span>
-        <span class="w3-bar-item w3-right"><a href="../index.html">Home</a></span>
-
+    <div id="header-container">
+        <script src="../asset/js/header.js"></script>
+        <script>
+            document.getElementById('header-container').innerHTML = eLearningHeader();
+        </script>
     </div>
 
+
     <!-- Sidebar/menu -->
+
     <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black w3-right"
+            onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i> </a>
         <div class="w3-container w3-row">
+
             <div class="w3-col s4">
                 <img src="" class="w3-circle w3-margin-right" style="width:46px">
+
             </div>
+
             <div class="w3-col s8 w3-bar">
+
                 <span><strong>eLearning</strong></span><br>
             </div>
         </div>
         <hr>
         <div class="w3-container">
-            <h5>Differential Equation</h5>
+            <h5 id="subject-title">Differential Equation</h5>
         </div>
         <div class="w3-bar-block">
-            <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black"
-                onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-            <a href="#" class="w3-bar-item w3-button w3-padding w3-blue"><img src="" class="notepadIcon">  Subjects</a>
-            <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>  Updates</a>
-            <link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
+
+            <div id="list-of-lecture">
+
+            </div>
         </div>
     </nav>
 
@@ -115,44 +123,55 @@
 
     <script src="../asset/js/subjectHomeInfo.js"></script>
     <script>
-// Get the current subject and lecture from URL parameters
-const params = new URLSearchParams(window.location.search);
-const subjectCode = params.get('subject');
-const lectureCode = params.get('lectureCode');
+        // Get the current subject and lecture from URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const subjectCode = params.get('subject');
+        const lectureCode = params.get('lectureCode');
 
-// Find the subject and lecture based on URL parameters
-const subject = subjectList.find(s => s.code === subjectCode);
-if (!subject) {
-    window.location.href = "../index.html";  // Redirect if subject is not found
-}
+        // Find the subject and lecture based on URL parameters
+        const subject = subjectList.find(s => s.code === subjectCode);
+        if (!subject) {
+            window.location.href = "../index.html";  // Redirect if subject is not found
+        }
+        const sidebarSubjectTitle = document.getElementById('subject-title');
+        const sidebarLecture = document.getElementById('list-of-lecture');
+        sidebarSubjectTitle.innerText = subject.subjectTitle;
 
-const lecture = subject.listOfLecture.find(l => l.code === lectureCode);
-if (!lecture) {
-    window.location.href = "../index.html";  // Redirect if lecture is not found
-}
+        subject.listOfLecture.forEach(lecture => {
+            const a = document.createElement("a");
+            a.href = lecture.link;
+            a.className = `w3-bar-item w3-button w3-padding nowrap lec-subbar ${lecture.code === lectureCode ? 'w3-blue' : ''}`;
+            a.innerHTML = `&nbsp; L${lecture.lectureNo} ${lecture.lectureTitle}`;
+            sidebarLecture.appendChild(a);
+        });
 
-// Get the folder name where images are stored
-const folderName = lecture.lectureFolderName;  // '../images/de_lecture_3/3. Families of Curves_page-'
+        const lecture = subject.listOfLecture.find(l => l.code === lectureCode);
+        if (!lecture) {
+            window.location.href = "../index.html";  // Redirect if lecture is not found
+        }
 
-// Container where images will be displayed
-const imageContainer = document.getElementById("image-gallery");
+        // Get the folder name where images are stored
+        const folderName = lecture.lectureFolderName;  // '../images/de_lecture_3/3. Families of Curves_page-'
 
-// Loop through the range 1 to 17 to generate image paths
-for (let i = 1; i <= 17; i++) {
-    // Format the image index to match the filename pattern (e.g., 0001, 0002, ...)
-    const imageIndex = String(i).padStart(4, '0');  // Format with leading zeros (e.g., 0001)
-    const imagePath = `${folderName}${imageIndex}.jpg`;  // Construct the full path
+        // Container where images will be displayed
+        const imageContainer = document.getElementById("image-gallery");
 
-    // Create an <img> element and set its source
-    const imgElement = document.createElement("img");
-    imgElement.src = imagePath;
-    imgElement.alt = `Lecture Image ${i}`;
-    imgElement.style.width = "100%";  // Adjust width as needed
-    imgElement.style.marginBottom = "10px";
+        // Loop through the range 1 to 17 to generate image paths
+        for (let i = 1; i <= lecture.pageNumber; i++) {
+            // Format the image index to match the filename pattern (e.g., 0001, 0002, ...)
+            const imageIndex = String(i).padStart(4, '0');  // Format with leading zeros (e.g., 0001)
+            const imagePath = `${folderName}${imageIndex}.jpg`;  // Construct the full path
 
-    // Append the image to the image container
-    imageContainer.appendChild(imgElement);
-}
+            // Create an <img> element and set its source
+            const imgElement = document.createElement("img");
+            imgElement.src = imagePath;
+            imgElement.alt = `Lecture Image ${i}`;
+            imgElement.style.width = "100%";  // Adjust width as needed
+            imgElement.style.marginBottom = "10px";
+
+            // Append the image to the image container
+            imageContainer.appendChild(imgElement);
+        }
     </script>
 
 </body>

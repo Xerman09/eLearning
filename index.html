@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./asset/css/style.css">
 <script src="asset/js/header.js"></script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4839649705386416" crossorigin="anonymous"></script>
 <style>
@@ -48,11 +49,8 @@ a{
   <div class="w3-container">
     <h5>Dashboard</h5>
   </div>
-  <div class="w3-bar-block">
-    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding w3-blue"><img src="" class="notepadIcon">  Subjects</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>  Updates</a>
-    <link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
+  <div class="w3-bar-block" id="sidebar-container">
+
   </div>
 </nav>
 
@@ -62,7 +60,18 @@ a{
 
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
-
+  <style>
+    .main-header{
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--firstcolor);
+      padding-top: 2rem;
+    }
+  </style>
+<div class="main-header">
+    WELCOME TO ELEARNING
+</div>
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
     <h5>
@@ -107,6 +116,7 @@ a{
 
   <!-- End page content -->
 </div>
+<script src="./asset/js/homeSidebar.js"></script>
 
 <script>
 // Get the Sidebar
@@ -148,8 +158,8 @@ var notepadIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA
 
 </script>
 <!-- List of JavaScript Import-->
-<script src="./subjectRender.js" defer></script>
-<script src="./solutionManual.js" defer></script>
-<script src="./practiceExam.js" defer></script>
+<script type="module" src="./subjectRender.js" defer></script>
+<script type="module" src="./solutionManual.js"></script>
+<script type="module" src="./practiceExam.js" defer></script>
 </body>
 </html>

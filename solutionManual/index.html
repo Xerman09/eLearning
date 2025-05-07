@@ -9,8 +9,10 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4839649705386416" crossorigin="anonymous"></script>
-    
+    <link rel="stylesheet" href="../asset/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4839649705386416"
+        crossorigin="anonymous"></script>
+
     <style>
         html,
         body,
@@ -40,12 +42,11 @@
 <body class="w3-light-grey">
 
     <!-- Top container -->
-    <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
-        <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey"
-            onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-        <span class="w3-bar-item w3-right">Logo</span>
-        <span class="w3-bar-item w3-right"><a href="../index.html">Home</a></span>
-
+    <div id="header-container">
+        <script src="../asset/js/header.js"></script>
+        <script>
+          document.getElementById('header-container').innerHTML = eLearningHeader();
+      </script>
     </div>
 
     <!-- Sidebar/menu -->
@@ -92,25 +93,28 @@
             <div class="w3-panel">
                 <div class="w3-row-padding" style="margin:0 -16px">
                     <h5 style="font-weight:700;" id="subject-overview-header"></h5>
-                    <p style="text-align:justify;" id="subject-overview"></p>
                 </div>
             </div>
         </div>
-
-
-
+        <style>
+            table tr th{
+                background-color: var(--firstcolor);
+                color: white;
+            }
+            table .sectionList:hover{
+                background: lightslategray;
+            }
+        </style>
         <div class="w3-row-padding w3-margin-bottom">
             <div class="w3-panel">
-                <div class="w3-row-padding" style="margin:0 -16px" >
+                <div class="w3-row-padding" style="margin:0 -16px">
                     <h5>TOPICS:</h5>
                     <table class="w3-table w3-striped w3-white" id="lecture-table">
                         <tr>
-                            <td><i class="fa fa-user w3-text-blue w3-large"></i></td>
-                            <td>Lecture</td>
-                            <td>Information</td>
-                            <td>Date</td>
+                            <th>Section</th>
+                            <th>Title</th>
+                            <th>Problems</th>
                         </tr>
-
                     </table>
                 </div>
             </div>
@@ -125,8 +129,9 @@
 
         <!-- End page content -->
     </div>
-
-    <script src="../asset/js/subjectHomeInfo.js"></script>
+    <script src="../asset/js/header.js"></script>
+    <script src="../asset/js/homeSidebar.js"></script>
+    <script src="../asset/js/solutionManualList.js"></script>
     <script>
         // Get URL parameters
         const params = new URLSearchParams(window.location.search);
@@ -134,22 +139,20 @@
         // Get the value of 'name'
         const code = params.get('subject');
 
-        const subjectInfo = subjectList.find(s => s.code === code);
+        const subjectInfo = solutionManual.find(s => s.code === code);
 
         // If subject is found, display it. If not, redirect.
         if (subjectInfo) {
-            document.getElementById('subject-title').innerText = `${subjectInfo.subjectTitle}`;
-            document.getElementById('subject-overview-header').innerText = `Overview to ${subjectInfo.subjectTitle}`;
-            document.getElementById('subject-overview').innerHTML = `${subjectInfo.description}`;
+            document.getElementById('subject-title').innerText = `${subjectInfo.title}`;
 
             const table = document.getElementById('lecture-table');
             subjectInfo.listOfLecture.forEach(lecture => {
                 const row = document.createElement('tr');
+                row.className = 'sectionList';
                 row.innerHTML = `
-                    <td><i class="fa fa-user w3-text-blue w3-large"></i></td>
-                    <td>Lecture ${lecture.lectureNo}</td>
-                    <td><a href="${lecture.link}">${lecture.lectureTitle}</a></td>
-                    <td>${lecture.date || 'TBA'}</td>
+                    <td><a href="listOfQuestions.html?subject=${code}&topic=${lecture.code}">Section ${lecture.lectureNo}</a></td>
+                    <td><a href="listOfQuestions.html?subject=${code}&topic=${lecture.code}">${lecture.title}</a></td>
+                    <td><a href="listOfQuestions.html?subject=${code}&topic=${lecture.code}">${lecture.listOfProblems.length || 'TBA'}</a></td>
                 `;
                 table.appendChild(row);
             });

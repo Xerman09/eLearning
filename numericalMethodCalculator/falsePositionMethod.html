@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>False Position Method Calculator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/katex.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .calculator-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .parsed-function {
+            background-color: #f0f8ff;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .option-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .radio-option,
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .solution-container {
+            margin-top: 30px;
+        }
+
+        .input-display {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .iterations-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .iteration-box {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .iteration-header {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .iteration-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .math-display {
+            margin: 10px 0;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        .explanation {
+            background-color: #f5f5f5;
+            padding: 12px;
+            border-left: 4px solid #3498db;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .root-location {
+            background-color: #e8f8f5;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #2ecc71;
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .interval-inputs {
+            display: flex;
+            gap: 15px;
+        }
+
+        .interval-input {
+            flex: 1;
+        }
+
+        .parameters-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .parameter-group {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .result-summary {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .final-root {
+            color: #2c3e50;
+            font-size: 20px;
+        }
+
+        .error-value {
+            color: #3498db;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:hover {
+            background-color: #e6f7ff;
+        }
+
+        .formula-display {
+            background-color: #f8f9fa;
+            border-left: 4px solid #f1c40f;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .calculation-step {
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        /* Make KaTeX formulas larger */
+        .katex {
+            font-size: 1.2em;
+        }
+
+        .grid-template-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @media (max-width: 768px) {
+
+            .options-container,
+            .interval-inputs {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>False Position Method Calculator</h1>
+
+    <div class="calculator-container">
+        <div class="input-group">
+            <label for="function-input">Enter Function f(x):</label>
+            <input type="text" id="function-input" placeholder="e.g., 2x^3 - 2x - 5 or sin(x) - x/2" value="">
+            <div class="parsed-function" id="parsed-function">f(x) = </div>
+            <div class="formula-display">
+                <strong>False Position Method Formula:</strong>
+                <div class="math-display">
+                    \[ x_0 = \frac{x_1 \cdot f(x_2) - x_2 \cdot f(x_1)}{f(x_2) - f(x_1)} \]
+                </div>
+                <p>The False Position method uses linear interpolation to find a better approximation of the root.</p>
+            </div>
+        </div>
+
+        <div class="options-container">
+            <div class="option-group">
+                <label>Root Finding Method:</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="interval-root" name="root-method" value="interval" >
+                        <label for="interval-root">Find root in interval</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="any-root" name="root-method" value="any" checked>
+                        <label for="any-root">Find any root</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <label>Error Calculation:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="absolute-error" name="error-type" value="absolute">
+                        <label for="absolute-error">Absolute Error</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="relative-error" name="error-type" value="relative">
+                        <label for="relative-error">Relative Percent Error</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="interval-inputs" id="interval-container">
+            <div class="interval-input">
+                <label for="lower-bound">Lower Bound (x₁):</label>
+                <input type="number" id="lower-bound" placeholder="e.g., 1" value="1" step="any">
+            </div>
+            <div class="interval-input">
+                <label for="upper-bound">Upper Bound (x₂):</label>
+                <input type="number" id="upper-bound" placeholder="e.g., 2" value="2" step="any">
+            </div>
+        </div>
+
+        <div class="parameters-container">
+            <div class="parameter-group">
+                <label for="tolerance">Tolerance (ε):</label>
+                <input type="number" id="tolerance" placeholder="e.g., 0.0001" value="0.0001" min="0" step="any">
+            </div>
+            <div class="parameter-group">
+                <label for="max-iterations">Max Iterations:</label>
+                <input type="number" id="max-iterations" placeholder="e.g., 100" value="50" min="1" step="1">
+            </div>
+            <div class="parameter-group">
+                <label for="decimal-digits">Decimal Digits:</label>
+                <input type="number" id="decimal-digits" placeholder="e.g., 5" value="5" min="1" max="15" step="1">
+            </div>
+        </div>
+
+        <div class="error-message" id="error-message"></div>
+
+        <button id="calculate-btn">Calculate Root</button>
+    </div>
+
+    <div class="solution-container" id="solution-container" style="display: none;">
+        <h2>Solution Steps</h2>
+        <div class="input-display" id="input-display"></div>
+
+        <div class="explanation-box" id="interval-explanation"
+            style="background-color: #e8f8f5; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 5px solid #2ecc71;">
+            <h3 style="margin-top: 0; color: #27ae60;">Finding Root Intervals</h3>
+            <p>For the function <strong>f(x)</strong> entered above, we evaluate at consecutive values to find a sign
+                change:</p>
+            <div id="interval-demo-table"></div>
+            <p>When f(x₁) and f(x₂) have opposite signs, a root exists in the interval [x₁, x₂].</p>
+        </div>
+
+        <div id="interval-finding-results"
+            style="background-color: #eaf2f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 5px solid #3498db;">
+            <h3 style="margin-top: 0; color: #2980b9;">Interval Search Results</h3>
+            <p id="interval-search-explanation"></p>
+        </div>
+
+        <div class="iterations-container" id="iterations-container"></div>
+        <div class="result-summary" id="result-summary"></div>
+
+        <h3>Solution Table</h3>
+        <div id="solution-table-container"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // DOM Elements
+            const functionInput = document.getElementById('function-input');
+            const parsedFunction = document.getElementById('parsed-function');
+            const intervalRoot = document.getElementById('interval-root');
+            const anyRoot = document.getElementById('any-root');
+            const intervalContainer = document.getElementById('interval-container');
+            const lowerBound = document.getElementById('lower-bound');
+            const upperBound = document.getElementById('upper-bound');
+            const tolerance = document.getElementById('tolerance');
+            const maxIterations = document.getElementById('max-iterations');
+            const decimalDigits = document.getElementById('decimal-digits');
+            const absoluteError = document.getElementById('absolute-error');
+            const relativeError = document.getElementById('relative-error');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const errorMessage = document.getElementById('error-message');
+            const solutionContainer = document.getElementById('solution-container');
+            const inputDisplay = document.getElementById('input-display');
+            const iterationsContainer = document.getElementById('iterations-container');
+            const resultSummary = document.getElementById('result-summary');
+            const solutionTableContainer = document.getElementById('solution-table-container');
+
+            // Handle root method selection
+            intervalRoot.addEventListener('change', toggleIntervalInputs);
+            anyRoot.addEventListener('change', toggleIntervalInputs);
+
+            function toggleIntervalInputs() {
+                if (intervalRoot.checked) {
+                    intervalContainer.style.display = 'flex';
+                } else {
+                    intervalContainer.style.display = 'none';
+                }
+            }
+
+            // Initialize - show interval inputs since "Find root in interval" is the default
+            toggleIntervalInputs();
+
+            // Parse function input and display in mathematical form
+            function updateParsedFunction() {
+                try {
+                    const expression = functionInput.value.trim();
+                    if (expression) {
+                        // Convert to LaTeX
+                        const latex = '\\[f(x) = ' + math.parse(expression).toTex() + '\\]';
+                        parsedFunction.innerHTML = latex;
+                        renderMathInElement(parsedFunction);
+                        errorMessage.textContent = '';
+                    } else {
+                        parsedFunction.textContent = 'f(x) = ';
+                    }
+                } catch (error) {
+                    parsedFunction.textContent = 'f(x) = ' + functionInput.value;
+                    errorMessage.textContent = 'Invalid function syntax';
+                }
+            }
+
+            // Initial function parsing
+            updateParsedFunction();
+
+            // Listen for input changes
+            functionInput.addEventListener('input', updateParsedFunction);
+
+            // Calculate button click handler
+            calculateBtn.addEventListener('click', function () {
+                errorMessage.textContent = '';
+
+                try {
+                    const expression = functionInput.value.trim();
+                    if (!expression) {
+                        throw new Error('Please enter a function');
+                    }
+
+                    // Create function from input
+                    const f = x => math.evaluate(expression, { x });
+
+                    // Get parameters
+                    const tol = parseFloat(tolerance.value) || 0.0001;
+                    const maxIter = parseInt(maxIterations.value) || 50;
+                    const digits = parseInt(decimalDigits.value) || 5;
+
+                    let result;
+
+                    if (intervalRoot.checked) {
+                        // Find root in specified interval
+                        const x1 = parseFloat(lowerBound.value);
+                        const x2 = parseFloat(upperBound.value);
+
+                        if (isNaN(x1) || isNaN(x2)) {
+                            throw new Error('Please enter valid interval bounds');
+                        }
+
+                        if (x1 >= x2) {
+                            throw new Error('Upper bound must be greater than lower bound');
+                        }
+
+                        const fx1 = f(x1);
+                        const fx2 = f(x2);
+
+                        if (fx1 * fx2 >= 0) {
+                            throw new Error('Function must have opposite signs at interval endpoints (f(x₁) * f(x₂) < 0)');
+                        }
+
+                        result = falsePositionMethod(f, x1, x2, tol, maxIter, digits);
+                    } else {
+                        // Find any root using improved interval search
+                        result = findAnyRootImproved(f, tol, maxIter, digits);
+                    }
+
+                    // Display results
+                    displayResults(result, f, expression, digits);
+
+                } catch (error) {
+                    errorMessage.textContent = error.message || 'An error occurred';
+                }
+            });
+
+            // False Position method implementation
+            function falsePositionMethod(f, x1, x2, tol, maxIter, digits) {
+                let iterations = [];
+                let iteration = 0;
+                let x0, fx1, fx2, fx0;
+                let error = Infinity;
+                let prevX0 = null;
+
+                fx1 = f(x1);
+                fx2 = f(x2);
+
+                while (iteration < maxIter && error > tol) {
+                    // Calculate false position (instead of midpoint)
+                    x0 = (x1 * fx2 - x2 * fx1) / (fx2 - fx1);
+                    fx0 = f(x0);
+
+                    // Calculate errors if applicable
+                    if (prevX0 !== null) {
+                        error = Math.abs(x0 - prevX0);
+                    }
+
+                    // Store iteration data
+                    iterations.push({
+                        iteration: iteration + 1,
+                        x1: x1,
+                        x2: x2,
+                        x0: x0,
+                        fx1: fx1,
+                        fx2: fx2,
+                        fx0: fx0,
+                        error: prevX0 !== null ? Math.abs(x0 - prevX0) : null,
+                        relError: prevX0 !== null ? Math.abs((x0 - prevX0) / x0) * 100 : null
+                    });
+
+                    // Update interval
+                    if (Math.abs(fx0) < tol) {
+                        // Found a close enough root
+                        break;
+                    } else if (fx1 * fx0 < 0) {
+                        x2 = x0;
+                        fx2 = fx0;
+                    } else {
+                        x1 = x0;
+                        fx1 = fx0;
+                    }
+
+                    prevX0 = x0;
+                    iteration++;
+                }
+
+                return {
+                    root: x0,
+                    iterations: iterations,
+                    converged: error <= tol || Math.abs(fx0) < tol,
+                    iterationCount: iteration + 1
+                };
+            }
+
+            // Improved method to find any root by checking sequential integers first
+            function findAnyRootImproved(f, tol, maxIter, digits) {
+                // Log the search steps
+                const searchLog = [];
+
+                // First try consecutive integers from -10 to 10
+                const searchRange = 20;
+
+                // Sequential search from 0 outward
+                for (let i = 0; i < searchRange; i++) {
+                    // Check positive side: i to i+1
+                    if (i < searchRange - 1) {
+                        let fx1 = f(i);
+                        let fx2 = f(i + 1);
+                        searchLog.push({ x1: i, x2: i + 1, fx1: fx1, fx2: fx2, comment: "Checking consecutive integers" });
+
+                        if (fx1 * fx2 <= 0) {
+                            // Found a sign change!
+                            document.getElementById('error-message').innerHTML =
+                                `<span style="color: green;">Found root interval: [${i}, ${i + 1}] where f(${i}) = ${fx1.toFixed(digits)} and f(${i + 1}) = ${fx2.toFixed(digits)}</span>`;
+                            return falsePositionMethod(f, i, i + 1, tol, maxIter, digits);
+                        }
+                    }
+
+                    // Check negative side: -i to -(i+1)
+                    if (i > 0) {
+                        let fx1 = f(-i);
+                        let fx2 = f(-(i + 1));
+                        searchLog.push({ x1: -i, x2: -(i + 1), fx1: fx1, fx2: fx2, comment: "Checking consecutive negative integers" });
+
+                        if (fx1 * fx2 <= 0) {
+                            // Found a sign change!
+                            document.getElementById('error-message').innerHTML =
+                                `<span style="color: green;">Found root interval: [${-(i + 1)}, ${-i}] where f(${-(i + 1)}) = ${fx2.toFixed(digits)} and f(${-i}) = ${fx1.toFixed(digits)}</span>`;
+                            return falsePositionMethod(f, -(i + 1), -i, tol, maxIter, digits);
+                        }
+                    }
+                }
+
+                // If no roots found in integer intervals, try smaller increments
+                document.getElementById('error-message').innerHTML =
+                    `<span style="color: orange;">No root found between consecutive integers. Trying smaller increments...</span>`;
+
+                const step = 0.5;
+                for (let x = -searchRange; x <= searchRange; x += step) {
+                    let fx1 = f(x);
+                    let fx2 = f(x + step);
+                    searchLog.push({ x1: x, x2: x + step, fx1: fx1, fx2: fx2, comment: "Checking half-unit intervals" });
+
+                    if (fx1 * fx2 <= 0) {
+                        document.getElementById('error-message').innerHTML =
+                            `<span style="color: green;">Found root interval: [${x.toFixed(digits)}, ${(x + step).toFixed(digits)}] where f(${x.toFixed(digits)}) = ${fx1.toFixed(digits)} and f(${(x + step).toFixed(digits)}) = ${fx2.toFixed(digits)}</span>`;
+                        return falsePositionMethod(f, x, x + step, tol, maxIter, digits);
+                    }
+                }
+
+                // If still no roots found, try broader ranges
+                document.getElementById('error-message').innerHTML =
+                    `<span style="color: orange;">No root found in close range. Searching broader intervals...</span>`;
+
+                const ranges = [
+                    { x1: -50, x2: 50 },
+                    { x1: -100, x2: 100 },
+                    { x1: -1000, x2: 1000 }
+                ];
+
+                for (let range of ranges) {
+                    for (let x = range.x1; x < range.x2; x += 5) {
+                        let fx1 = f(x);
+                        let fx2 = f(x + 5);
+                        searchLog.push({ x1: x, x2: x + 5, fx1: fx1, fx2: fx2, comment: "Searching broader range" });
+
+                        if (fx1 * fx2 <= 0) {
+                            document.getElementById('error-message').innerHTML =
+                                `<span style="color: green;">Found root interval in broader search: [${x}, ${x + 5}] where f(${x}) = ${fx1.toFixed(digits)} and f(${x + 5}) = ${fx2.toFixed(digits)}</span>`;
+                            return falsePositionMethod(f, x, x + 5, tol, maxIter, digits);
+                        }
+                    }
+                }
+
+                // If we get here, no roots were found
+                console.log("Search log:", searchLog);
+                throw new Error('Could not find an interval containing a root. Try specifying an interval.');
+            }
+
+            // Display results in mathematical form with explanations
+            function displayResults(result, f, expression, digits) {
+                solutionContainer.style.display = 'block';
+
+                // Format the input function
+                const latexExpression = '\\[f(x) = ' + math.parse(expression).toTex() + '\\]';
+                inputDisplay.innerHTML = latexExpression;
+                // Render KaTeX for the inputDisplay - This is the key fix!
+                renderMathInElement(inputDisplay);
+
+                // Update interval finding results
+                updateIntervalDemoTable(f, expression, digits);
+
+                // Update interval finding explanation based on the method used
+                const intervalSearchExplanation = document.getElementById('interval-search-explanation');
+                if (intervalRoot.checked) {
+                    // User specified interval
+                    const x1 = parseFloat(lowerBound.value);
+                    const x2 = parseFloat(upperBound.value);
+                    const fx1 = f(x1);
+                    const fx2 = f(x2);
+
+                    intervalSearchExplanation.innerHTML = `
+                    <strong>User-specified interval:</strong> [${x1}, ${x2}]<br>
+                    <strong>Function values:</strong> f(${x1}) = ${fx1.toFixed(digits)} and f(${x2}) = ${fx2.toFixed(digits)}<br>
+                    <strong>Verification:</strong> Since f(${x1}) and f(${x2}) have opposite signs (${fx1.toFixed(digits)} × ${fx2.toFixed(digits)} < 0), 
+                    there is at least one root in this interval.
+                `;
+                } else {
+                    // Automatic interval search
+                    const x1 = result.iterations[0].x1;
+                    const x2 = result.iterations[0].x2;
+                    const fx1 = result.iterations[0].fx1;
+                    const fx2 = result.iterations[0].fx2;
+
+                    intervalSearchExplanation.innerHTML = `
+                    <strong>Automatically found interval:</strong> [${x1}, ${x2}]<br>
+                    <strong>Function values:</strong> f(${x1}) = ${fx1.toFixed(digits)} and f(${x2}) = ${fx2.toFixed(digits)}<br>
+                    <strong>Search method:</strong> The algorithm found that 
+                    between x=${x1} and x=${x2}, the function changes sign (${fx1.toFixed(digits)} × ${fx2.toFixed(digits)} < 0), 
+                    indicating a root exists in this interval.
+                `;
+                }
+
+                // Clear previous iterations
+                iterationsContainer.innerHTML = '';
+
+                // Add each iteration
+                result.iterations.forEach(iter => {
+                    const iterBox = document.createElement('div');
+                    iterBox.className = 'iteration-box';
+
+                    const iterHeader = document.createElement('div');
+                    iterHeader.className = 'iteration-header';
+                    iterHeader.textContent = `Iteration ${iter.iteration}`;
+
+                    const iterContent = document.createElement('div');
+                    iterContent.className = 'iteration-content';
+
+                    // Root location explanation
+                    const rootLocationDiv = document.createElement('div');
+                    rootLocationDiv.className = 'root-location';
+
+                    // Create sign descriptions
+                    const fx1Sign = iter.fx1 < 0 ? "< 0" : "> 0";
+                    const fx2Sign = iter.fx2 < 0 ? "< 0" : "> 0";
+
+                    rootLocationDiv.innerHTML = `
+                    Here f(${iter.x1.toFixed(digits)}) = ${iter.fx1.toFixed(digits)} ${fx1Sign} and 
+                    f(${iter.x2.toFixed(digits)}) = ${iter.fx2.toFixed(digits)} ${fx2Sign}<br>
+                    ∴ Now, Root lies between ${iter.x1.toFixed(digits)} and ${iter.x2.toFixed(digits)}
+                `;
+
+                    // Interval values
+                    const intervalDiv = document.createElement('div');
+                    intervalDiv.className = 'math-display';
+                    intervalDiv.innerHTML = `
+                    <div class="grid-template-2">
+                        <div>
+                            \\[x_1 = ${iter.x1.toFixed(digits)}\\]
+                            \\[f(x_1) = ${iter.fx1.toFixed(digits)}\\]
+                        </div>
+                        <div>
+                            \\[x_2 = ${iter.x2.toFixed(digits)}\\]
+                            \\[f(x_2) = ${iter.fx2.toFixed(digits)}\\]
+                        </div>
+                    </div>
+                `;
+
+                    // False Position calculation with formula - with more space between steps
+                    const falsePositionDiv = document.createElement('div');
+                    falsePositionDiv.className = 'math-display';
+
+                    // Step by step calculation with more spacing and using brackets for larger display
+                    falsePositionDiv.innerHTML = `
+                <style>
+                    .katex-display>.katex{
+                        text-align: left;
+                        margin-left: 5%;
+                    }
+                </style>
+                    <strong>False Position Formula:</strong><br>
+                    <div class="calculation-step">
+                        \\[x_0 = \\frac{x_1 \\cdot f(x_2) - x_2 \\cdot f(x_1)}{f(x_2) - f(x_1)}\\]
+                    </div>
+                    <br>
+
+                    <strong>Substitute the value to the Formula:</strong><br>
+                    <div class="calculation-step">
+                        \\[x_0 = \\frac{${iter.x1.toFixed(digits)} \\cdot ${iter.fx2.toFixed(digits)} - ${iter.x2.toFixed(digits)} \\cdot ${iter.fx1.toFixed(digits)}}{${iter.fx2.toFixed(digits)} - (${iter.fx1.toFixed(digits)})}\\]
+                    </div>
+                    <br>
+                    
+                    <strong>Simplify the Equation:</strong><br>
+                    <div class="calculation-step">
+                        \\[x_0 = \\frac{${(iter.x1 * iter.fx2).toFixed(digits)} - (${(iter.x2 * iter.fx1).toFixed(digits)})}{${(iter.fx2 - iter.fx1).toFixed(digits)}}\\]
+                    </div>
+                    <br>
+                    
+                    <div class="calculation-step">
+                        \\[x_0 = ${iter.x0.toFixed(digits)}\\]
+                    </div>
+                `;
+
+                    // Function value at x0
+                    const fx0Div = document.createElement('div');
+                    fx0Div.className = 'math-display';
+                    fx0Div.innerHTML = `
+                    \\[f(x_0) = f(${iter.x0.toFixed(digits)}) = ${iter.fx0.toFixed(digits)}\\]
+                `;
+
+                    // Error calculation
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'math-display';
+
+                    if (iter.error !== null) {
+                        let errorCalc = '';
+
+                        if (absoluteError.checked) {
+                            errorCalc += `
+                            <strong>Absolute Error:</strong><br>
+                            \\[|x_{current} - x_{previous}| = |${iter.x0.toFixed(digits)} - ${(iter.x0 - iter.error).toFixed(digits)}| = ${iter.error.toFixed(digits)}\\]
+                        `;
+                        }
+
+                        if (relativeError.checked) {
+                            errorCalc += `
+                            <strong>Relative Percent Error:</strong><br>
+                            \\[\\left|\\frac{x_{current} - x_{previous}}{x_{current}}\\right| \\times 100\\% = \\left|\\frac{${iter.x0.toFixed(digits)} - ${(iter.x0 - iter.error).toFixed(digits)}}{${iter.x0.toFixed(digits)}}\\right| \\times 100\\% = ${iter.relError.toFixed(digits)}\\%\\]
+                        `;
+                        }
+
+                        errorDiv.innerHTML = errorCalc;
+                    } else {
+                        errorDiv.innerHTML = `<p>Error calculation not available for first iteration</p>`;
+                    }
+
+                    // Explanation of next steps
+                    const explanationDiv = document.createElement('div');
+                    explanationDiv.className = 'explanation';
+
+                    // Check if we found a root (function value close to zero)
+                    if (Math.abs(iter.fx0) < parseFloat(tolerance.value)) {
+                        explanationDiv.innerHTML = `
+                        <strong>Root found!</strong> The value of f(${iter.x0.toFixed(digits)}) = ${iter.fx0.toFixed(digits)} 
+                        is smaller than the tolerance (${parseFloat(tolerance.value)}), so we consider this a root.
+                    `;
+                    } else if (iter.fx0 * iter.fx1 < 0) {
+                        // If f(x0) and f(x1) have opposite signs
+                        explanationDiv.innerHTML = `
+                        Since f(x₀) = ${iter.fx0.toFixed(digits)} and f(x₁) = ${iter.fx1.toFixed(digits)} have opposite signs,
+                        the root must lie between x₀ and x₁. For the next iteration, we'll replace x₂ with x₀.
+                    `;
+                    } else {
+                        // If f(x0) and f(x2) have opposite signs
+                        explanationDiv.innerHTML = `
+                        Since f(x₀) = ${iter.fx0.toFixed(digits)} and f(x₂) = ${iter.fx2.toFixed(digits)} have opposite signs,
+                        the root must lie between x₀ and x₂. For the next iteration, we'll replace x₁ with x₀.
+                    `;
+                    }
+
+                    // Assemble the iteration box
+                    iterContent.appendChild(intervalDiv);
+                    iterContent.appendChild(rootLocationDiv);
+                    iterContent.appendChild(falsePositionDiv);
+                    iterContent.appendChild(fx0Div);
+                    iterContent.appendChild(errorDiv);
+                    iterContent.appendChild(explanationDiv);
+
+                    iterBox.appendChild(iterHeader);
+                    iterBox.appendChild(iterContent);
+                    iterationsContainer.appendChild(iterBox);
+
+                    // Render all LaTeX after adding to DOM
+                    renderMathInElement(iterBox);
+                });
+
+                // Result summary
+                const finalRoot = result.root;
+                const finalFx = f(finalRoot);
+
+                let errorType = '';
+                if (absoluteError.checked && relativeError.checked) {
+                    errorType = 'absolute and relative';
+                } else if (absoluteError.checked) {
+                    errorType = 'absolute';
+                } else if (relativeError.checked) {
+                    errorType = 'relative';
+                } else {
+                    errorType = 'any';
+                }
+
+                let convergenceMsg = '';
+                if (result.converged) {
+                    convergenceMsg = `The method converged in ${result.iterationCount} iterations.`;
+                } else {
+                    convergenceMsg = `The method reached the maximum number of iterations (${parseInt(maxIterations.value)}) without converging to the specified tolerance.`;
+                }
+
+                resultSummary.innerHTML = `
+                <div class="final-root">Root approximation: x ≈ ${finalRoot.toFixed(digits)}</div>
+                <div>Function value at approximated root: f(${finalRoot.toFixed(digits)}) = ${finalFx.toFixed(digits)}</div>
+                <div>${convergenceMsg}</div>
+                <div class="error-value">Final ${errorType} error: ${result.iterations[result.iterations.length - 1].error?.toFixed(digits) || 'N/A'}</div>
+            `;
+
+                // Render KaTeX for the result summary - This is another key fix!
+                renderMathInElement(resultSummary);
+
+                // Create solution table
+                createSolutionTable(result.iterations, digits);
+
+                // Render KaTeX for the entire solution container - This ensures everything is rendered
+                renderMathInElement(solutionContainer);
+
+                // Scroll to solution
+                solutionContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // Create a table to demonstrate interval finding
+            function updateIntervalDemoTable(f, expression, digits) {
+                const intervalDemoTable = document.getElementById('interval-demo-table');
+
+                let tableHTML = `
+                <table>
+                    <tr>
+                        <th>x</th>
+                        <th>f(x)</th>
+                        <th>Sign</th>
+                        <th>Comments</th>
+                    </tr>
+            `;
+
+                if (intervalRoot.checked) {
+                    // User-specified interval, just show those values
+                    const x1 = parseFloat(lowerBound.value);
+                    const x2 = parseFloat(upperBound.value);
+                    const fx1 = f(x1);
+                    const fx2 = f(x2);
+
+                    tableHTML += `
+                    <tr>
+                        <td>${x1}</td>
+                        <td>${fx1.toFixed(digits)}</td>
+                        <td>${fx1 < 0 ? 'Negative' : 'Positive'}</td>
+                        <td>User-provided lower bound</td>
+                    </tr>
+                    <tr>
+                        <td>${x2}</td>
+                        <td>${fx2.toFixed(digits)}</td>
+                        <td>${fx2 < 0 ? 'Negative' : 'Positive'}</td>
+                        <td>User-provided upper bound</td>
+                    </tr>
+                `;
+                } else {
+                    // Show demonstration of interval finding
+                    const values = [-3, -2, -1, 0, 1, 2, 3];
+                    let foundInterval = false;
+
+                    for (let i = 0; i < values.length - 1; i++) {
+                        const x1 = values[i];
+                        const x2 = values[i + 1];
+                        const fx1 = f(x1);
+                        const fx2 = f(x2);
+                        const hasSignChange = fx1 * fx2 <= 0;
+
+                        tableHTML += `
+                        <tr ${hasSignChange ? 'style="background-color: #d5f5e3;"' : ''}>
+                            <td>${x1}</td>
+                            <td>${fx1.toFixed(digits)}</td>
+                            <td>${fx1 < 0 ? 'Negative' : 'Positive'}</td>
+                            <td>${hasSignChange ? 'Start of interval' : ''}</td>
+                        </tr>
+                    `;
+
+                        // Only add the last point once
+                        if (i === values.length - 2) {
+                            tableHTML += `
+                            <tr ${hasSignChange ? 'style="background-color: #d5f5e3;"' : ''}>
+                                <td>${x2}</td>
+                                <td>${fx2.toFixed(digits)}</td>
+                                <td>${fx2 < 0 ? 'Negative' : 'Positive'}</td>
+                                <td>${hasSignChange ? 'End of interval' : ''}</td>
+                            </tr>
+                        `;
+                        }
+
+                        if (hasSignChange) {
+                            foundInterval = true;
+                        }
+                    }
+
+                    if (!foundInterval) {
+                        tableHTML += `
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #e74c3c;">
+                                No sign change detected in the demonstrated range. For automatic interval finding, 
+                                the algorithm will search a wider range.
+                            </td>
+                        </tr>
+                    `;
+                    }
+                }
+
+                tableHTML += `</table>`;
+                intervalDemoTable.innerHTML = tableHTML;
+
+                // Render KaTeX in the interval demo table - Another fix point
+                renderMathInElement(document.getElementById('interval-demo-table'));
+            }
+
+            // Create a solution table from iterations
+            function createSolutionTable(iterations, digits) {
+                const tableContainer = document.getElementById('solution-table-container');
+
+                let tableHTML = `
+                <table>
+                    <tr>
+                        <th>Iteration</th>
+                        <th>x₁</th>
+                        <th>x₂</th>
+                        <th>f(x₁)</th>
+                        <th>f(x₂)</th>
+                        <th>x₀</th>
+                        <th>f(x₀)</th>
+                        <th>Error</th>
+                        <th>Rel. Error (%)</th>
+                    </tr>
+            `;
+
+                iterations.forEach(iter => {
+                    tableHTML += `
+                    <tr>
+                        <td>${iter.iteration}</td>
+                        <td>${iter.x1.toFixed(digits)}</td>
+                        <td>${iter.x2.toFixed(digits)}</td>
+                        <td>${iter.fx1.toFixed(digits)}</td>
+                        <td>${iter.fx2.toFixed(digits)}</td>
+                        <td>${iter.x0.toFixed(digits)}</td>
+                        <td>${iter.fx0.toFixed(digits)}</td>
+                        <td>${iter.error !== null ? iter.error.toFixed(digits) : 'N/A'}</td>
+                        <td>${iter.relError !== null ? iter.relError.toFixed(digits) : 'N/A'}</td>
+                    </tr>
+                `;
+                });
+
+                tableHTML += `</table>`;
+                tableContainer.innerHTML = tableHTML;
+
+                // Render KaTeX in the solution table - Another fix point
+                renderMathInElement(tableContainer);
+            }
+
+            // Initial render of KaTeX elements
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "\\[", right: "\\]", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false }
+                ]
+            });
+        });
+    </script>
+</body>
+
+</html>

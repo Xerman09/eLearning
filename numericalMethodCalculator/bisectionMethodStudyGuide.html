@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bisection Method Study Guide</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/katex.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .theory {
+            background-color: #e8f4f8;
+            border-left: 5px solid #3498db;
+        }
+
+        .algorithm {
+            background-color: #e8f8f5;
+            border-left: 5px solid #2ecc71;
+        }
+
+        .example {
+            background-color: #fff8e8;
+            border-left: 5px solid #f39c12;
+        }
+
+        .steps {
+            margin-left: 20px;
+            padding-left: 20px;
+            border-left: 2px solid #ddd;
+        }
+
+        .iteration-box {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+        }
+
+        .iteration-header {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:hover {
+            background-color: #e6f7ff;
+        }
+
+        .formula {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+
+        .note {
+            background-color: #fff0f0;
+            border-left: 4px solid #e74c3c;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+
+        .tip {
+            background-color: #f0fff0;
+            border-left: 4px solid #27ae60;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+
+        .visual {
+            background-color: #f8f9fa;
+            border: 1px dashed #aaa;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .fraction {
+            font-size: 120%;
+            font-weight: bold;
+            display: inline-block;
+            vertical-align: middle;
+            color: #2c3e50;
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 0 5px 5px 5px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .solution-container {
+            margin-top: 20px;
+        }
+
+        .root-result {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .gif-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .error-box {
+            background-color: #f7e6e6;
+            border-left: 4px solid #c0392b;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .nav-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+
+        .math-display {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                border-radius: 0;
+                margin-right: 0;
+                margin-bottom: 2px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Bisection Method Study Guide</h1>
+
+    <div class="section theory">
+        <h2>1. Understanding the Bisection Method</h2>
+        <p>The bisection method is one of the simplest and most reliable root-finding algorithms. It is based on repeatedly dividing an interval in half and selecting the subinterval where the root lies.</p>
+
+        <div class="formula">
+            <p>For a continuous function \(f(x)\) on the interval \([a, b]\) where \(f(a) \cdot f(b) < 0\) (opposite signs):</p>
+            <p>\(c = \frac{a + b}{2}\) (midpoint)</p>
+        </div>
+
+        <p>The method works because of the <strong>Intermediate Value Theorem</strong>, which states that if a continuous function has values of opposite signs at the endpoints of an interval, then it must have at least one root within that interval.</p>
+
+        <div class="visual">
+            <p>Visual Representation:</p>
+            <img src="/api/placeholder/500/300" alt="Bisection method concept diagram">
+        </div>
+
+        <h3>Key Requirements:</h3>
+        <ul>
+            <li>The function must be continuous over the interval [a, b]</li>
+            <li>The function values at endpoints must have opposite signs: \(f(a) \cdot f(b) < 0\)</li>
+        </ul>
+
+        <div class="tip">
+            <p><strong>Tip:</strong> The bisection method always converges, but it may be slower than other methods like Newton-Raphson. However, its reliability makes it an excellent choice for many applications.</p>
+        </div>
+    </div>
+
+    <div class="section algorithm">
+        <h2>2. The Bisection Algorithm</h2>
+        <h3>Step-by-Step Procedure:</h3>
+        <div class="steps">
+            <ol>
+                <li>Choose an initial interval [a, b] where \(f(a) \cdot f(b) < 0\)</li>
+                <li>Calculate the midpoint: \(c = \frac{a + b}{2}\)</li>
+                <li>Calculate \(f(c)\)</li>
+                <li>Determine the new interval:
+                    <ul>
+                        <li>If \(f(c) = 0\), we've found the root: \(x = c\)</li>
+                        <li>If \(f(a) \cdot f(c) < 0\), the root is in [a, c], so set \(b = c\)</li>
+                        <li>If \(f(b) \cdot f(c) < 0\), the root is in [c, b], so set \(a = c\)</li>
+                    </ul>
+                </li>
+                <li>Repeat steps 2-4 until one of the termination criteria is met</li>
+            </ol>
+        </div>
+
+        <h3>Termination Criteria:</h3>
+        <ul>
+            <li><strong>Absolute Error:</strong> \(|c_{new} - c_{old}| < \epsilon\)</li>
+            <li><strong>Relative Error:</strong> \(\frac{|c_{new} - c_{old}|}{|c_{new}|} \times 100\% < \epsilon\)</li>
+            <li><strong>Function Value:</strong> \(|f(c)| < \epsilon\)</li>
+            <li><strong>Maximum Iterations:</strong> When a predefined number of iterations is reached</li>
+        </ul>
+
+        <h3>Error Analysis:</h3>
+        <p>The maximum error in the bisection method after \(n\) iterations is:</p>
+        <div class="formula">
+            <p>\(E_n = \frac{b - a}{2^{n+1}}\)</p>
+        </div>
+
+        <p>To achieve an error less than \(\epsilon\), the number of iterations required is:</p>
+        <div class="formula">
+            <p>\(n \geq \frac{\log(b-a) - \log(\epsilon)}{\log(2)}\)</p>
+        </div>
+
+        <div class="error-box">
+            <p><strong>Common Error:</strong> Forgetting to check if the function values at endpoints have opposite signs. Always verify \(f(a) \cdot f(b) < 0\) before starting the algorithm.</p>
+        </div>
+    </div>
+
+    <div class="section example">
+        <h2>3. Example 1: Finding the Root of \(f(x) = x^3 - 2x - 5\)</h2>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(event, 'example1-problem')">Problem</div>
+            <div class="tab" onclick="switchTab(event, 'example1-setup')">Setup</div>
+            <div class="tab" onclick="switchTab(event, 'example1-solution')">Solution</div>
+        </div>
+        
+        <div id="example1-problem" class="tab-content active">
+            <p>Find a root of the function \(f(x) = x^3 - 2x - 5\) using the bisection method with a tolerance of \(\epsilon = 0.001\).</p>
+            
+            <div class="tip">
+                <p>This is a common example for the bisection method because the function is continuous and has both positive and negative values.</p>
+            </div>
+            
+            <h3>Step 1: Find an Initial Interval</h3>
+            <p>Let's evaluate the function at several points to find where it changes sign:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>x</th>
+                        <th>f(x)</th>
+                        <th>Sign</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>1 - 2 - 5 = -6</td>
+                        <td>Negative</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>8 - 4 - 5 = -1</td>
+                        <td>Negative</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>27 - 6 - 5 = 16</td>
+                        <td>Positive</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p>Since \(f(2) < 0\) and \(f(3) > 0\), the function changes sign in the interval [2, 3].</p>
+        </div>
+        
+        <div id="example1-setup" class="tab-content">
+            <h3>The Bisection Setup</h3>
+            <p>For this example:</p>
+            <ul>
+                <li>Function: \(f(x) = x^3 - 2x - 5\)</li>
+                <li>Initial interval: [2, 3]</li>
+                <li>Tolerance: \(\epsilon = 0.001\)</li>
+                <li>Maximum iterations: 20 (to be safe)</li>
+            </ul>
+            
+            <p>Let's verify our initial interval meets the requirements:</p>
+            <ul>
+                <li>\(f(2) = 2^3 - 2(2) - 5 = 8 - 4 - 5 = -1 < 0\)</li>
+                <li>\(f(3) = 3^3 - 2(3) - 5 = 27 - 6 - 5 = 16 > 0\)</li>
+                <li>Since \(f(2) \cdot f(3) = -1 \cdot 16 = -16 < 0\), the interval contains a root.</li>
+            </ul>
+            
+            <div class="visual">
+                <p>Graph of \(f(x) = x^3 - 2x - 5\) showing the root between 2 and 3:</p>
+                <img src="/api/placeholder/500/300" alt="Graph of f(x) = x^3 - 2x - 5">
+            </div>
+        </div>
+        
+        <div id="example1-solution" class="tab-content">
+            <h3>Bisection Method Solution</h3>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 1</div>
+                <div class="math-display">
+                    \(a = 2\), \(f(a) = -1\)<br>
+                    \(b = 3\), \(f(b) = 16\)<br>
+                    \(c = \frac{a + b}{2} = \frac{2 + 3}{2} = 2.5\)<br>
+                    \(f(c) = f(2.5) = (2.5)^3 - 2(2.5) - 5 = 15.625 - 5 - 5 = 5.625 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(a) < 0\), the root is in [a, c] = [2, 2.5].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 2</div>
+                <div class="math-display">
+                    \(a = 2\), \(f(a) = -1\)<br>
+                    \(b = 2.5\), \(f(b) = 5.625\)<br>
+                    \(c = \frac{a + b}{2} = \frac{2 + 2.5}{2} = 2.25\)<br>
+                    \(f(c) = f(2.25) = (2.25)^3 - 2(2.25) - 5 = 11.39 - 4.5 - 5 = 1.89 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(a) < 0\), the root is in [a, c] = [2, 2.25].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 3</div>
+                <div class="math-display">
+                    \(a = 2\), \(f(a) = -1\)<br>
+                    \(b = 2.25\), \(f(b) = 1.89\)<br>
+                    \(c = \frac{a + b}{2} = \frac{2 + 2.25}{2} = 2.125\)<br>
+                    \(f(c) = f(2.125) = (2.125)^3 - 2(2.125) - 5 = 9.58 - 4.25 - 5 = 0.33 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(a) < 0\), the root is in [a, c] = [2, 2.125].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 4</div>
+                <div class="math-display">
+                    \(a = 2\), \(f(a) = -1\)<br>
+                    \(b = 2.125\), \(f(b) = 0.33\)<br>
+                    \(c = \frac{a + b}{2} = \frac{2 + 2.125}{2} = 2.0625\)<br>
+                    \(f(c) = f(2.0625) = (2.0625)^3 - 2(2.0625) - 5 = 8.77 - 4.125 - 5 = -0.36 < 0\)
+                </div>
+                <p>Since \(f(c) < 0\) and \(f(b) > 0\), the root is in [c, b] = [2.0625, 2.125].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 5</div>
+                <div class="math-display">
+                    \(a = 2.0625\), \(f(a) = -0.36\)<br>
+                    \(b = 2.125\), \(f(b) = 0.33\)<br>
+                    \(c = \frac{a + b}{2} = \frac{2.0625 + 2.125}{2} = 2.09375\)<br>
+                    \(f(c) = f(2.09375) = (2.09375)^3 - 2(2.09375) - 5 = 9.17 - 4.1875 - 5 = -0.02 < 0\)
+                </div>
+                <p>Since \(f(c) < 0\) and \(f(b) > 0\), the root is in [c, b] = [2.09375, 2.125].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 6</div>
+                <div class="math-display">
+                    \(a = 2.09375\), \(f(a) = -0.02\)<br>
+                    \(b = 2.125\), \(f(b) = 0.33\)<br>
+                    \(c = \frac{a + b}{2} = \frac{2.09375 + 2.125}{2} = 2.10938\)<br>
+                    \(f(c) = f(2.10938) = (2.10938)^3 - 2(2.10938) - 5 = 9.38 - 4.21876 - 5 = 0.16 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(a) < 0\), the root is in [a, c] = [2.09375, 2.10938].</p>
+                <p>Current interval width: 2.10938 - 2.09375 = 0.01563 > 0.001</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 7</div>
+                <div class="math-display">
+                    \(a = 2.09375\), \(f(a) = -0.02\)<br>
+                    \(b = 2.10938\), \(f(b) = 0.16\)<br>
+                    \(c = \frac{a + b}{2} = \frac{2.09375 + 2.10938}{2} = 2.10156\)<br>
+                    \(f(c) = f(2.10156) = (2.10156)^3 - 2(2.10156) - 5 = 9.28 - 4.20312 - 5 = 0.07 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(a) < 0\), the root is in [a, c] = [2.09375, 2.10156].</p>
+                <p>Current interval width: 2.10156 - 2.09375 = 0.00781 > 0.001</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 8</div>
+                <div class="math-display">
+                    \(a = 2.09375\), \(f(a) = -0.02\)<br>
+                    \(b = 2.10156\), \(f(b) = 0.07\)<br>
+                    \(c = \frac{a + b}{2} = \frac{2.09375 + 2.10156}{2} = 2.09766\)<br>
+                    \(f(c) = f(2.09766) = (2.09766)^3 - 2(2.09766) - 5 = 9.22 - 4.19532 - 5 = 0.02 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(a) < 0\), the root is in [a, c] = [2.09375, 2.09766].</p>
+                <p>Current interval width: 2.09766 - 2.09375 = 0.00391 > 0.001</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 9</div>
+                <div class="math-display">
+                    \(a = 2.09375\), \(f(a) = -0.02\)<br>
+                    \(b = 2.09766\), \(f(b) = 0.02\)<br>
+                    \(c = \frac{a + b}{2} = \frac{2.09375 + 2.09766}{2} = 2.0957\)<br>
+                    \(f(c) = f(2.0957) = (2.0957)^3 - 2(2.0957) - 5 = 9.20 - 4.1914 - 5 = 0.01 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(a) < 0\), the root is in [a, c] = [2.09375, 2.0957].</p>
+                <p>Current interval width: 2.0957 - 2.09375 = 0.00195 > 0.001</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 10</div>
+                <div class="math-display">
+                    \(a = 2.09375\), \(f(a) = -0.02\)<br>
+                    \(b = 2.0957\), \(f(b) = 0.01\)<br>
+                    \(c = \frac{a + b}{2} = \frac{2.09375 + 2.0957}{2} = 2.09473\)<br>
+                    \(f(c) = f(2.09473) = (2.09473)^3 - 2(2.09473) - 5 = 9.19 - 4.18946 - 5 = 0.00054 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(a) < 0\), the root is in [a, c] = [2.09375, 2.09473].</p>
+                <p>Current interval width: 2.09473 - 2.09375 = 0.00098 < 0.001</p>
+                <p>Since the interval width is less than our tolerance, we stop here.</p>
+            </div>
+            
+            <div class="root-result">
+                <p>The root is approximately \(x \approx 2.09473\) with \(f(2.09473) \approx 0.00054\)</p>
+                <p>We required 10 iterations to achieve the desired tolerance.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section example">
+        <h2>4. Example 2: Finding the Root of \(f(x) = x^2 - 2\)</h2>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(event, 'example2-problem')">Problem</div>
+            <div class="tab" onclick="switchTab(event, 'example2-setup')">Setup</div>
+            <div class="tab" onclick="switchTab(event, 'example2-solution')">Solution</div>
+        </div>
+        
+        <div id="example2-problem" class="tab-content active">
+            <p>Find the positive root of the function \(f(x) = x^2 - 2\) using the bisection method with a tolerance of \(\epsilon = 0.0001\).</p>
+            
+            <div class="tip">
+                <p>This problem is asking us to find \(\sqrt{2}\) numerically. The exact value is an irrational number, which makes it a good candidate for the bisection method.</p>
+            </div>
+            
+            <h3>Step 1: Find an Initial Interval</h3>
+            <p>Let's evaluate the function at several points to find where it changes sign:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>x</th>
+                        <th>f(x)</th>
+                        <th>Sign</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>1 - 2 = -1</td>
+                        <td>Negative</td>
+                    </tr>
+                    <tr>
+                        <td>1.5</td>
+                        <td>(1.5)² - 2 = 2.25 - 2 = 0.25</td>
+                        <td>Positive</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p>Since \(f(1) < 0\) and \(f(1.5) > 0\), the function changes sign in the interval [1, 1.5].</p>
+        </div>
+        
+        <div id="example2-setup" class="tab-content">
+            <h3>The Bisection Setup</h3>
+            <p>For this example:</p>
+            <ul>
+                <li>Function: \(f(x) = x^2 - 2\)</li>
+                <li>Initial interval: [1, 1.5]</li>
+                <li>Tolerance: \(\epsilon = 0.0001\)</li>
+                <li>Maximum iterations: 20 (to be safe)</li>
+            </ul>
+            
+            <p>Let's verify our initial interval meets the requirements:</p>
+            <ul>
+                <li>\(f(1) = 1^2 - 2 = -1 < 0\)</li>
+                <li>\(f(1.5) = 1.5^2 - 2 = 2.25 - 2 = 0.25 > 0\)</li>
+                <li>Since \(f(1) \cdot f(1.5) = -1 \cdot 0.25 = -0.25 < 0\), the interval contains a root.</li>
+            </ul>
+            
+            <p>This problem is mathematically equivalent to finding \(\sqrt{2}\), since the root of \(x^2 - 2 = 0\) is \(x = \sqrt{2} \approx 1.4142\).</p>
+            
+            <div class="visual">
+                <p>Graph of \(f(x) = x^2 - 2\) showing the root at \(\sqrt{2}\):</p>
+                <img src="/api/placeholder/500/300" alt="Graph of f(x) = x^2 - 2">
+            </div>
+        </div>
+        
+        <div id="example2-solution" class="tab-content">
+            <h3>Bisection Method Solution</h3>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 1</div>
+                <div class="math-display">
+                    \(a = 1\), \(f(a) = -1\)<br>
+                    \(b = 1.5\), \(f(b) = 0.25\)<br>
+                    \(c = \frac{a + b}{2} = \frac{1 + 1.5}{2} = 1.25\)<br>
+                    \(f(c) = f(1.25) = (1.25)^2 - 2 = 1.5625 - 2 = -0.4375 < 0\)
+                </div>
+                <p>Since \(f(c) < 0\) and \(f(a) < 0\), the root is in [c, b] = [1.25, 1.5].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 2</div>
+                <div class="math-display">
+                    \(a = 1.25\), \(f(a) = -0.4375\)<br>
+                    \(b = 1.5\), \(f(b) = 0.25\)<br>
+                    \(c = \frac{a + b}{2} = \frac{1.25 + 1.5}{2} = 1.375\)<br>
+                    \(f(c) = f(1.375) = (1.375)^2 - 2 = 1.890625 - 2 = -0.109375 < 0\)
+                </div>
+                <p>Since \(f(c) < 0\) and \(f(b) > 0\), the root is in [c, b] = [1.375, 1.5].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 3</div>
+                <div class="math-display">
+                    \(a = 1.375\), \(f(a) = -0.109375\)<br>
+                    \(b = 1.5\), \(f(b) = 0.25\)<br>
+                    \(c = \frac{a + b}{2} = \frac{1.375 + 1.5}{2} = 1.4375\)<br>
+                    \(f(c) = f(1.4375) = (1.4375)^2 - 2 = 2.0664 - 2 = 0.0664 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(a) < 0\), the root is in [a, c] = [1.375, 1.4375].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 4</div>
+                <div class="math-display">
+                    \(a = 1.375\), \(f(a) = -0.109375\)<br>
+                    \(b = 1.4375\), \(f(b) = 0.0664\)<br>
+                    \(c = \frac{a + b}{2} = \frac{1.375 + 1.4375}{2} = 1.40625\)<br>
+                    \(f(c) = f(1.40625) = (1.40625)^2 - 2 = 1.9775 - 2 = -0.0225 < 0\)
+                </div>
+                <p>Since \(f(c) < 0\) and \(f(b) > 0\), the root is in [c, b] = [1.40625, 1.4375].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 5</div>
+                <div class="math-display">
+                    \(a = 1.40625\), \(f(a) = -0.0225\)<br>
+                    \(b = 1.4375\), \(f(b) = 0.0664\)<br>
+                    \(c = \frac{a + b}{2} = \frac{1.40625 + 1.4375}{2} = 1.421875\)<br>
+                    \(f(c) = f(1.421875) = (1.421875)^2 - 2 = 2.0217 - 2 = 0.0217 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(a) < 0\), the root is in [a, c] = [1.40625, 1.421875].</p>
+            </div>
+            
+            <!-- Additional iterations would continue here until reaching the tolerance -->
+            
+            <!-- Fast forward to final iterations -->
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 12</div>
+                <div class="math-display">
+                    \(a = 1.4142\), \(f(a) = -0.0000236\)<br>
+                    \(b = 1.41425\), \(f(b) = 0.0000729\)<br>
+                    \(c = \frac{a + b}{2} = \frac{1.4142 + 1.41425}{2} = 1.414225\)<br>
+                    \(f(c) = f(1.414225) = (1.414225)^2 - 2 = 2.0000122 - 2 = 0.0000122 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(a) < 0\), the root is in [a, c] = [1.4142, 1.414225].</p>
+                <p>Current interval width: 1.414225 - 1.4142 = 0.000025 < 0.0001</p>
+                <p>Since the interval width is less than our tolerance, we stop here.</p>
+            </div>
+            
+            <div class="root-result">
+                <p>The root is approximately \(x \approx 1.4142\) with \(f(1.4142) \approx -0.0000236\)</p>
+                <p>We required 12 iterations to achieve the desired tolerance.</p>
+                <p>The actual value of \(\sqrt{2} \approx 1.41421356237\), so our approximation is quite accurate.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section example">
+        <h2>5. Example 3: Finding the Root of \(f(x) = e^x - 3x\)</h2>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(event, 'example3-problem')">Problem</div>
+            <div class="tab" onclick="switchTab(event, 'example3-solution')">Solution</div>
+        </div>
+        
+        <div id="example3-problem" class="tab-content active">
+            <p>Find a root of the function \(f(x) = e^x - 3x\) using the bisection method with a tolerance of \(\epsilon = 0.001\).</p>
+            
+            <h3>Step 1: Find an Initial Interval</h3>
+            <p>Let's evaluate the function at several points to find where it changes sign:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>x</th>
+                        <th>f(x)</th>
+                        <th>Sign</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>e^0 - 3(0) = 1 - 0 = 1</td>
+                        <td>Positive</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>e^1 - 3(1) = 2.718 - 3 = -0.282</td>
+                        <td>Negative</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p>Since \(f(0) > 0\) and \(f(1) < 0\), the function changes sign in the interval [0, 1].</p>
+            
+            <div class="visual">
+                <p>Graph of \(f(x) = e^x - 3x\) showing the root between 0 and 1:</p>
+                <img src="/api/placeholder/500/300" alt="Graph of f(x) = e^x - 3x">
+            </div>
+        </div>
+        
+        <div id="example3-solution" class="tab-content">
+            <h3>Bisection Method Solution</h3>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 1</div>
+                <div class="math-display">
+                    \(a = 0\), \(f(a) = 1\)<br>
+                    \(b = 1\), \(f(b) = -0.282\)<br>
+                    \(c = \frac{a + b}{2} = \frac{0 + 1}{2} = 0.5\)<br>
+                    \(f(c) = f(0.5) = e^{0.5} - 3(0.5) = 1.649 - 1.5 = 0.149 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(b) < 0\), the root is in [c, b] = [0.5, 1].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 2</div>
+                <div class="math-display">
+                    \(a = 0.5\), \(f(a) = 0.149\)<br>
+                    \(b = 1\), \(f(b) = -0.282\)<br>
+                    \(c = \frac{a + b}{2} = \frac{0.5 + 1}{2} = 0.75\)<br>
+                    \(f(c) = f(0.75) = e^{0.75} - 3(0.75) = 2.117 - 2.25 = -0.133 < 0\)
+                </div>
+                <p>Since \(f(c) < 0\) and \(f(a) > 0\), the root is in [a, c] = [0.5, 0.75].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 3</div>
+                <div class="math-display">
+                    \(a = 0.5\), \(f(a) = 0.149\)<br>
+                    \(b = 0.75\), \(f(b) = -0.133\)<br>
+                    \(c = \frac{a + b}{2} = \frac{0.5 + 0.75}{2} = 0.625\)<br>
+                    \(f(c) = f(0.625) = e^{0.625} - 3(0.625) = 1.868 - 1.875 = -0.007 < 0\)
+                </div>
+                <p>Since \(f(c) < 0\) and \(f(a) > 0\), the root is in [a, c] = [0.5, 0.625].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 4</div>
+                <div class="math-display">
+                    \(a = 0.5\), \(f(a) = 0.149\)<br>
+                    \(b = 0.625\), \(f(b) = -0.007\)<br>
+                    \(c = \frac{a + b}{2} = \frac{0.5 + 0.625}{2} = 0.5625\)<br>
+                    \(f(c) = f(0.5625) = e^{0.5625} - 3(0.5625) = 1.755 - 1.6875 = 0.0675 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(b) < 0\), the root is in [c, b] = [0.5625, 0.625].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 5</div>
+                <div class="math-display">
+                    \(a = 0.5625\), \(f(a) = 0.0675\)<br>
+                    \(b = 0.625\), \(f(b) = -0.007\)<br>
+                    \(c = \frac{a + b}{2} = \frac{0.5625 + 0.625}{2} = 0.59375\)<br>
+                    \(f(c) = f(0.59375) = e^{0.59375} - 3(0.59375) = 1.811 - 1.78125 = 0.02975 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(b) < 0\), the root is in [c, b] = [0.59375, 0.625].</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 6</div>
+                <div class="math-display">
+                    \(a = 0.59375\), \(f(a) = 0.02975\)<br>
+                    \(b = 0.625\), \(f(b) = -0.007\)<br>
+                    \(c = \frac{a + b}{2} = \frac{0.59375 + 0.625}{2} = 0.609375\)<br>
+                    \(f(c) = f(0.609375) = e^{0.609375} - 3(0.609375) = 1.839 - 1.828125 = 0.010875 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(b) < 0\), the root is in [c, b] = [0.609375, 0.625].</p>
+                <p>Current interval width: 0.625 - 0.609375 = 0.015625 > 0.001</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 7</div>
+                <div class="math-display">
+                    \(a = 0.609375\), \(f(a) = 0.010875\)<br>
+                    \(b = 0.625\), \(f(b) = -0.007\)<br>
+                    \(c = \frac{a + b}{2} = \frac{0.609375 + 0.625}{2} = 0.6171875\)<br>
+                    \(f(c) = f(0.6171875) = e^{0.6171875} - 3(0.6171875) = 1.854 - 1.8515625 = 0.0024375 > 0\)
+                </div>
+                <p>Since \(f(c) > i 0\) and \(f(b) < 0\), the root is in [c, b] = [0.6171875, 0.625].</p>
+                <p>Current interval width: 0.625 - 0.6171875 = 0.0078125 > 0.001</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 8</div>
+                <div class="math-display">
+                    \(a = 0.6171875\), \(f(a) = 0.0024375\)<br>
+                    \(b = 0.625\), \(f(b) = -0.007\)<br>
+                    \(c = \frac{a + b}{2} = \frac{0.6171875 + 0.625}{2} = 0.62109375\)<br>
+                    \(f(c) = f(0.62109375) = e^{0.62109375} - 3(0.62109375) = 1.861 - 1.86328125 = -0.00228125 < 0\)
+                </div>
+                <p>Since \(f(c) < 0\) and \(f(a) > 0\), the root is in [a, c] = [0.6171875, 0.62109375].</p>
+                <p>Current interval width: 0.62109375 - 0.6171875 = 0.00390625 > 0.001</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 9</div>
+                <div class="math-display">
+                    \(a = 0.6171875\), \(f(a) = 0.0024375\)<br>
+                    \(b = 0.62109375\), \(f(b) = -0.00228125\)<br>
+                    \(c = \frac{a + b}{2} = \frac{0.6171875 + 0.62109375}{2} = 0.619140625\)<br>
+                    \(f(c) = f(0.619140625) = e^{0.619140625} - 3(0.619140625) = 1.857 - 1.857421875 = -0.000421875 < 0\)
+                </div>
+                <p>Since \(f(c) < 0\) and \(f(a) > 0\), the root is in [a, c] = [0.6171875, 0.619140625].</p>
+                <p>Current interval width: 0.619140625 - 0.6171875 = 0.001953125 > 0.001</p>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-header">Iteration 10</div>
+                <div class="math-display">
+                    \(a = 0.6171875\), \(f(a) = 0.0024375\)<br>
+                    \(b = 0.619140625\), \(f(b) = -0.000421875\)<br>
+                    \(c = \frac{a + b}{2} = \frac{0.6171875 + 0.619140625}{2} = 0.6181640625\)<br>
+                    \(f(c) = f(0.6181640625) = e^{0.6181640625} - 3(0.6181640625) = 1.856 - 1.8544921875 = 0.0015078125 > 0\)
+                </div>
+                <p>Since \(f(c) > 0\) and \(f(b) < 0\), the root is in [c, b] = [0.6181640625, 0.619140625].</p>
+                <p>Current interval width: 0.619140625 - 0.6181640625 = 0.0009765625 < 0.001</p>
+                <p>Since the interval width is less than our tolerance, we stop here.</p>
+            </div>
+            
+            <div class="root-result">
+                <p>The root is approximately \(x \approx 0.6181640625\) with \(f(0.6181640625) \approx 0.0015078125\)</p>
+                <p>We required 10 iterations to achieve the desired tolerance.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>6. Implementation in JavaScript</h2>
+        
+        <p>Below is a JavaScript implementation of the bisection method that you can use to understand the algorithm better:</p>
+        
+        <div class="visual">
+            <p>Try this interactive implementation:</p>
+            <div id="bisection-calculator">
+                <label for="function-input">Function f(x): </label>
+                <input type="text" id="function-input" value="x^3 - 2*x - 5" style="width: 200px;">
+                <br><br>
+                <label for="a-input">Lower bound a: </label>
+                <input type="number" id="a-input" value="2" step="0.1">
+                <br><br>
+                <label for="b-input">Upper bound b: </label>
+                <input type="number" id="b-input" value="3" step="0.1">
+                <br><br>
+                <label for="tol-input">Tolerance ε: </label>
+                <input type="number" id="tol-input" value="0.001" step="0.0001" min="0.0000001">
+                <br><br>
+                <label for="max-iter-input">Max iterations: </label>
+                <input type="number" id="max-iter-input" value="100" min="1" step="1">
+                <br><br>
+                <button id="calculate-btn">Calculate Root</button>
+                <div id="result" style="margin-top: 20px;"></div>
+                <div id="iterations-table" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+        
+        <div class="code">
+            <script>
+                // Function to render math expressions
+                document.addEventListener("DOMContentLoaded", function() {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: "\\(", right: "\\)", display: false},
+                            {left: "\\[", right: "\\]", display: true}
+                        ]
+                    });
+                    
+                    // Set up tab switching
+                    const tabs = document.querySelectorAll('.tab');
+                    tabs.forEach(tab => {
+                        tab.addEventListener('click', function(event) {
+                            const tabContentId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+                            switchTab(event, tabContentId);
+                        });
+                    });
+                    
+                    // Set up the bisection calculator
+                    document.getElementById('calculate-btn').addEventListener('click', function() {
+                        calculateBisection();
+                    });
+                });
+                
+                function switchTab(event, tabId) {
+                    // Hide all tab contents
+                    const tabContents = event.target.parentElement.parentElement.querySelectorAll('.tab-content');
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Remove active class from all tabs
+                    const tabs = event.target.parentElement.querySelectorAll('.tab');
+                    tabs.forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    
+                    // Add active class to selected tab and content
+                    document.getElementById(tabId).classList.add('active');
+                    event.target.classList.add('active');
+                }
+                
+                function calculateBisection() {
+                    const functionStr = document.getElementById('function-input').value;
+                    const a = parseFloat(document.getElementById('a-input').value);
+                    const b = parseFloat(document.getElementById('b-input').value);
+                    const tol = parseFloat(document.getElementById('tol-input').value);
+                    const maxIter = parseInt(document.getElementById('max-iter-input').value);
+                    
+                    try {
+                        // Create function from string
+                        const f = x => math.evaluate(functionStr, {x: x});
+                        
+                        // Check if f(a) and f(b) have opposite signs
+                        const fa = f(a);
+                        const fb = f(b);
+                        
+                        if (fa * fb >= 0) {
+                            document.getElementById('result').innerHTML = 
+                                `<div class="error-box">Error: f(a) = ${fa.toFixed(6)} and f(b) = ${fb.toFixed(6)} must have opposite signs!</div>`;
+                            document.getElementById('iterations-table').innerHTML = '';
+                            return;
+                        }
+                        
+                        // Implement bisection method
+                        let iterations = [];
+                        let a_i = a;
+                        let b_i = b;
+                        let c_i, fc;
+                        let i = 0;
+                        
+                        while (i < maxIter) {
+                            c_i = (a_i + b_i) / 2;
+                            fc = f(c_i);
+                            
+                            iterations.push({
+                                iteration: i + 1,
+                                a: a_i,
+                                b: b_i,
+                                c: c_i,
+                                fa: f(a_i),
+                                fb: f(b_i),
+                                fc: fc,
+                                interval: Math.abs(b_i - a_i)
+                            });
+                            
+                            if (Math.abs(fc) < 1e-10 || Math.abs(b_i - a_i) < tol) {
+                                break;
+                            }
+                            
+                            if (f(a_i) * fc < 0) {
+                                b_i = c_i;
+                            } else {
+                                a_i = c_i;
+                            }
+                            
+                            i++;
+                        }
+                        
+                        // Display result
+                        document.getElementById('result').innerHTML = 
+                            `<div class="root-result">
+                                <p>Root found: x ≈ ${c_i.toFixed(10)}</p>
+                                <p>Function value at root: f(x) = ${fc.toFixed(10)}</p>
+                                <p>Iterations required: ${i + 1}</p>
+                                <p>Final interval width: ${Math.abs(b_i - a_i).toFixed(10)}</p>
+                             </div>`;
+                        
+                        // Create iterations table
+                        let tableHtml = `
+                            <h3>Iteration Details</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Iteration</th>
+                                        <th>a</th>
+                                        <th>b</th>
+                                        <th>c</th>
+                                        <th>f(c)</th>
+                                        <th>Interval Width</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+                        
+                        iterations.forEach(iter => {
+                            tableHtml += `
+                                <tr>
+                                    <td>${iter.iteration}</td>
+                                    <td>${iter.a.toFixed(6)}</td>
+                                    <td>${iter.b.toFixed(6)}</td>
+                                    <td>${iter.c.toFixed(6)}</td>
+                                    <td>${iter.fc.toFixed(6)}</td>
+                                    <td>${iter.interval.toFixed(6)}</td>
+                                </tr>`;
+                        });
+                        
+                        tableHtml += `
+                                </tbody>
+                            </table>`;
+                        
+                        document.getElementById('iterations-table').innerHTML = tableHtml;
+                        
+                    } catch (error) {
+                        document.getElementById('result').innerHTML = 
+                            `<div class="error-box">Error: ${error.message}</div>`;
+                        document.getElementById('iterations-table').innerHTML = '';
+                    }
+                }
+            </script>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>7. Practice Problems</h2>
+        
+        <p>Try solving these problems using the bisection method:</p>
+        
+        <ol>
+            <li>Find a root of \(f(x) = x^3 + 4x^2 - 10\) in the interval [1, 2].</li>
+            <li>Find a root of \(f(x) = x\sin(x) - 1\) in the interval [0, 2].</li>
+            <li>Find a root of \(f(x) = e^x - x^2 - 3\) in the interval [1, 2].</li>
+            <li>Find a root of \(f(x) = \ln(x) - \cos(x)\) in the interval [1, 2].</li>
+            <li>Find a root of \(f(x) = x^4 - 6x^3 + 12x^2 - 10x + 3\) in the interval [0, 1].</li>
+        </ol>
+        
+        <div class="tip">
+            <p><strong>Challenge:</strong> Try implementing the bisection method on your own in your preferred programming language. Compare your results with the interactive calculator provided above.</p>
+        </div>
+    </div>
+    

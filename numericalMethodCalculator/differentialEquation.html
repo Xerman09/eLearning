@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Differential Equation Solver</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .instructions {
+            background-color: #eaf6ff;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+        }
+        
+        .input-section, .output-section {
+            margin-bottom: 25px;
+        }
+        
+        input, select {
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .display-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+        
+        .equation-preview {
+            margin: 15px 0;
+        }
+        
+        .solution-panel {
+            margin-top: 30px;
+            background-color: #f0f7ff;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #d4e6f9;
+        }
+        
+        .error {
+            color: #e74c3c;
+            background-color: #fadbd8;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .step {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .step:last-child {
+            border-bottom: none;
+        }
+        
+        .katex-display {
+            margin: 25px 0;
+            overflow-x: auto;
+        }
+        
+        .method-explanation {
+            background-color: #f0fff4;
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .final-answer {
+            background-color: #e8f4fc;
+            border: 2px solid #3498db;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Differential Equation Solver</h1>
+        
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <p>Enter a first-order ordinary differential equation in the form: <b>dy/dx = f(x,y)</b></p>
+            <p>For example: <code>dy/dx = 2*x + y</code> or <code>y' = x^2 - y</code></p>
+            <p>You can also provide initial conditions for a specific solution.</p>
+        </div>
+        
+        <div class="input-section">
+            <label for="equation">Enter Differential Equation:</label>
+            <input type="text" id="equation" placeholder="e.g., dy/dx = 2*x + y" value="dy/dx = 2*x + y">
+            
+            <div class="equation-preview">
+                <label>Equation Preview:</label>
+                <div id="liveEquationDisplay" class="display-panel"></div>
+            </div>
+            
+            <div>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="useInitialConditions" checked> 
+                    Use initial conditions
+                </label>
+            </div>
+            
+            <div id="initialConditionsSection">
+                <label for="initialX">Initial x value (x₀):</label>
+                <input type="number" id="initialX" placeholder="e.g., 0" value="0" step="0.1">
+                
+                <label for="initialY">Initial y value (y₀):</label>
+                <input type="number" id="initialY" placeholder="e.g., 1" value="1" step="0.1">
+            </div>
+            
+            <label for="method">Solution Method:</label>
+            <select id="method">
+                <option value="analytical">Analytical Solution (when possible)</option>
+                <option value="euler">Numerical: Euler's Method</option>
+                <option value="rk4">Numerical: Runge-Kutta (RK4)</option>
+            </select>
+            
+            <div id="numericalOptions">
+                <label for="stepSize">Step Size:</label>
+                <input type="number" id="stepSize" min="0.01" max="1" step="0.01" value="0.1">
+                
+                <label for="targetX">Solve up to x =</label>
+                <input type="number" id="targetX" value="1" step="0.1">
+            </div>
+            
+            <button id="solveBtn">Solve Equation</button>
+        </div>
+        
+        <div class="output-section">
+            <h3>Your Equation:</h3>
+            <div id="equationDisplay" class="display-panel"></div>
+            
+            <div id="solutionContainer" class="hidden solution-panel">
+                <h3>Solution:</h3>
+                <div id="solutionMethod" class="method-explanation"></div>
+                <div id="solutionSteps"></div>
+                <div id="solution" class="display-panel"></div>
+                <div id="finalAnswer" class="final-answer"></div>
+            </div>
+            
+            <div id="errorContainer" class="error hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all the necessary elements
+            const equationInput = document.getElementById('equation');
+            const useInitialConditions = document.getElementById('useInitialConditions');
+            const initialConditionsSection = document.getElementById('initialConditionsSection');
+            const initialXInput = document.getElementById('initialX');
+            const initialYInput = document.getElementById('initialY');
+            const methodSelect = document.getElementById('method');
+            const numericalOptions = document.getElementById('numericalOptions');
+            const stepSizeInput = document.getElementById('stepSize');
+            const targetXInput = document.getElementById('targetX');
+            const solveBtn = document.getElementById('solveBtn');
+            const liveEquationDisplay = document.getElementById('liveEquationDisplay');
+            const equationDisplay = document.getElementById('equationDisplay');
+            const solutionContainer = document.getElementById('solutionContainer');
+            const solutionMethod = document.getElementById('solutionMethod');
+            const solutionSteps = document.getElementById('solutionSteps');
+            const solution = document.getElementById('solution');
+            const finalAnswer = document.getElementById('finalAnswer');
+            const errorContainer = document.getElementById('errorContainer');
+            
+            // Show/hide numerical options based on method selection
+            methodSelect.addEventListener('change', function() {
+                if (this.value === 'euler' || this.value === 'rk4') {
+                    numericalOptions.style.display = 'block';
+                } else {
+                    numericalOptions.style.display = 'none';
+                }
+            });
+            
+            // Initialize numerical options visibility
+            if (methodSelect.value !== 'euler' && methodSelect.value !== 'rk4') {
+                numericalOptions.style.display = 'none';
+            }
+            
+            // Toggle initial conditions visibility
+            useInitialConditions.addEventListener('change', function() {
+                if (this.checked) {
+                    initialConditionsSection.style.display = 'block';
+                } else {
+                    initialConditionsSection.style.display = 'none';
+                }
+            });
+            
+            // Render equation in LaTeX when input changes
+            equationInput.addEventListener('input', function() {
+                renderLiveEquation();
+            });
+            
+            // Initial render
+            renderLiveEquation();
+            
+            // Handle solve button click
+            solveBtn.addEventListener('click', solveEquation);
+            
+            function renderLiveEquation() {
+                const eqText = equationInput.value.trim();
+                
+                if (!eqText) {
+                    liveEquationDisplay.innerHTML = "No equation entered";
+                    return;
+                }
+                
+                try {
+                    // Convert to LaTeX
+                    let latexEq = convertToLatex(eqText);
+                    liveEquationDisplay.innerHTML = `\\begin{align}${latexEq}\\end{align}`;
+                    
+                    // Render with KaTeX
+                    renderMathInElement(liveEquationDisplay, {
+                        delimiters: [
+                            {left: '\\begin{align}', right: '\\end{align}', display: true}
+                        ]
+                    });
+                } catch (err) {
+                    liveEquationDisplay.textContent = "Unable to parse equation";
+                    console.error(err);
+                }
+            }
+            
+            function convertToLatex(eqText) {
+                // Basic conversion to LaTeX
+                // Replace standard dy/dx or y' with LaTeX notation
+                let latexEq = eqText
+                    .replace(/dy\/dx/g, '\\frac{dy}{dx}')
+                    .replace(/y'/g, '\\frac{dy}{dx}')
+                    .replace(/\^/g, '^{')
+                    .replace(/\*\*/g, '^{')  // Replace ** (math.js power) with ^
+                    .replace(/\*/g, '\\cdot ');
+                    
+                // Add closing braces for powers if needed
+                const openBraces = (latexEq.match(/\^{/g) || []).length;
+                const closeBraces = (latexEq.match(/}/g) || []).length;
+                
+                if (openBraces > closeBraces) {
+                    latexEq += '}'.repeat(openBraces - closeBraces);
+                }
+                
+                return latexEq;
+            }
+            
+            function showError(message) {
+                errorContainer.textContent = message;
+                errorContainer.classList.remove('hidden');
+                solutionContainer.classList.add('hidden');
+            }
+            
+            function solveEquation() {
+                try {
+                    // Clear previous results
+                    errorContainer.classList.add('hidden');
+                    solutionContainer.classList.add('hidden');
+                    solutionSteps.innerHTML = '';
+                    
+                    const eqText = equationInput.value.trim();
+                    if (!eqText) {
+                        showError("Please enter a differential equation");
+                        return;
+                    }
+                    
+                    // Parse equation to extract f(x,y)
+                    const f = parseEquation(eqText);
+                    if (!f) {
+                        showError("Unable to parse the equation. Please use the format dy/dx = f(x,y)");
+                        return;
+                    }
+                    
+                    // Check if using initial conditions
+                    const useInitial = useInitialConditions.checked;
+                    
+                    // Get initial conditions if using them
+                    const x0 = useInitial ? (parseFloat(initialXInput.value) || 0) : 0;
+                    const y0 = useInitial ? (parseFloat(initialYInput.value) || 0) : 0;
+                    
+                    // Get selected method
+                    const method = methodSelect.value;
+                    
+                    // Show the equation in the output section
+                    equationDisplay.innerHTML = liveEquationDisplay.innerHTML;
+                    
+                    // Solve based on selected method
+                    let result;
+                    switch (method) {
+                        case 'analytical':
+                            result = solveAnalytically(f, x0, y0, eqText);
+                            break;
+                        case 'euler':
+                            const stepSize = parseFloat(stepSizeInput.value) || 0.1;
+                            const targetX = parseFloat(targetXInput.value) || 1;
+                            result = solveWithEuler(f, x0, y0, stepSize, targetX);
+                            break;
+                        case 'rk4':
+                            const h = parseFloat(stepSizeInput.value) || 0.1;
+                            const xTarget = parseFloat(targetXInput.value) || 1;
+                            result = solveWithRK4(f, x0, y0, h, xTarget);
+                            break;
+                    }
+                    
+                    // Display solution
+                    displaySolution(result, method);
+                    
+                } catch (err) {
+                    showError("Error solving equation: " + err.message);
+                    console.error(err);
+                }
+            }
+            
+            function parseEquation(eqText) {
+                // Match patterns like "dy/dx = ...", "y' = ...", etc.
+                const patterns = [
+                    /dy\/dx\s*=\s*(.+)/i,
+                    /y'\s*=\s*(.+)/i,
+                    /y\s*'\s*=\s*(.+)/i
+                ];
+                
+                let rightSide = null;
+                
+                for (const pattern of patterns) {
+                    const match = eqText.match(pattern);
+                    if (match && match[1]) {
+                        rightSide = match[1].trim();
+                        break;
+                    }
+                }
+                
+                if (!rightSide) return null;
+                
+                // Create a function from the right side expression
+                try {
+                    // Replace ^ with ** for math.js
+                    rightSide = rightSide.replace(/\^/g, '**');
+                    
+                    // Create a function that evaluates f(x,y)
+                    return function(x, y) {
+                        try {
+                            const scope = { x: x, y: y };
+                            return math.evaluate(rightSide, scope);
+                        } catch (err) {
+                            throw new Error("Error evaluating function: " + err.message);
+                        }
+                    };
+                } catch (err) {
+                    console.error("Error creating function:", err);
+                    return null;
+                }
+            }
+            
+            function solveAnalytically(f, x0, y0, eqText) {
+                // This is a very simplified analytical solver that can handle only a few types
+                // of first-order ODEs. For a comprehensive solver, more patterns would need to be added.
+                
+                // Try to identify the type of equation
+                let result = {
+                    method: "Analytical Solution",
+                    steps: [],
+                    finalValue: null,
+                    solution: null
+                };
+                
+                // Check if it's a linear equation of form dy/dx = ax + by + c
+                const linearPattern = /dy\/dx\s*=\s*([\d\.\-]*)?\s*\*?\s*x\s*([+\-])\s*([\d\.\-]*)?\s*\*?\s*y\s*([+\-]\s*[\d\.]+)?/i;
+                const linearMatch = eqText.match(linearPattern);
+                
+                if (linearMatch) {
+                    result.steps.push("Identified as a linear first-order ODE of the form: dy/dx = ax + by + c");
+                    
+                    // Determine coefficients a, b, c
+                    let a = linearMatch[1] ? parseFloat(linearMatch[1]) || 1 : 0;
+                    let b = linearMatch[3] ? parseFloat(linearMatch[3]) || 1 : 0;
+                    if (linearMatch[2] === '-') b = -b;
+                    
+                    let c = 0;
+                    if (linearMatch[4]) {
+                        const cMatch = linearMatch[4].match(/([\+\-])\s*([\d\.]+)/);
+                        if (cMatch) {
+                            c = parseFloat(cMatch[2]) || 0;
+                            if (cMatch[1] === '-') c = -c;
+                        }
+                    }
+                    
+                    result.steps.push(`Coefficients: a = ${a}, b = ${b}, c = ${c}`);
+                    
+                    // Solve using the integrating factor method
+                    result.steps.push("Using the integrating factor method to solve this linear equation");
+                    
+                    if (b === 0) {
+                        // Special case: dy/dx = ax + c
+                        result.steps.push("Since b = 0, this simplifies to: dy/dx = ax + c");
+                        result.steps.push("The general solution is: y = (a/2)x² + cx + C");
+                        
+                        // Apply initial condition
+                        const C = y0 - (a/2)*x0*x0 - c*x0;
+                        result.steps.push(`Applying the initial condition y(${x0}) = ${y0} to find C = ${C.toFixed(4)}`);
+                        
+                        // Final solution
+                        result.solution = `y = ${a/2}x^2 + ${c}x + ${C.toFixed(4)}`;
+                        result.latexSolution = `y = \\frac{${a}}{2}x^2 + ${c}x + ${C.toFixed(4)}`;
+                        
+                        // Calculate y at x0
+                        const yFinal = (a/2)*x0*x0 + c*x0 + C;
+                        result.finalValue = yFinal;
+                        
+                    } else {
+                        // Standard case: dy/dx = ax + by + c
+                        result.steps.push("Rewriting as: dy/dx - by = ax + c");
+                        result.steps.push(`The integrating factor is e^{-∫b dx} = e^{-${b}x}`);
+                        
+                        // Multiply through by integrating factor
+                        result.steps.push(`Multiplying both sides by e^{-${b}x}`);
+                        result.steps.push(`d/dx[y·e^{-${b}x}] = (ax + c)·e^{-${b}x}`);
+                        
+                        // Integrate the right side
+                        let rightSideIntegral = "";
+                        let constant = "";
+                        
+                        if (a !== 0) {
+                            result.steps.push(`Integrating (ax + c)·e^{-${b}x} requires integration by parts for the ax term`);
+                            
+                            if (c !== 0) {
+                                result.steps.push(`The full integral is complex and involves terms with e^{-${b}x}`);
+                                rightSideIntegral = `\\frac{a}{${b}^2}(${b}x - 1)e^{-${b}x} - \\frac{c}{${b}}e^{-${b}x}`;
+                                constant = ` + C`;
+                            } else {
+                                result.steps.push(`The integral simplifies to terms with e^{-${b}x}`);
+                                rightSideIntegral = `\\frac{a}{${b}^2}(${b}x - 1)e^{-${b}x}`;
+                                constant = ` + C`;
+                            }
+                        } else if (c !== 0) {
+                            result.steps.push(`Integrating c·e^{-${b}x} = ${c}·e^{-${b}x}`);
+                            rightSideIntegral = `-\\frac{${c}}{${b}}e^{-${b}x}`;
+                            constant = ` + C`;
+                        } else {
+                            rightSideIntegral = "0";
+                            constant = ` + C`;
+                        }
+                        
+                        result.steps.push(`After integration: y·e^{-${b}x} = ${rightSideIntegral}${constant}`);
+                        result.steps.push(`Solving for y: y = ${rightSideIntegral}${constant} · e^{${b}x}`);
+                        
+                        // For simplicity, calculate numerical value using Euler's method
+                        result.steps.push("Due to the complexity, computing the numerical value using Euler's method");
+                        
+                        // Use Euler's method with small step size
+                        const eulerResult = solveWithEuler(f, x0, y0, 0.01, x0);
+                        result.finalValue = eulerResult.finalValue;
+                        
+                        // Display the general form of the solution
+                        result.solution = "The solution involves exponential terms - see the steps above.";
+                        result.latexSolution = `\\text{Solution involves exponential terms}`;
+                    }
+                    
+                } else if (eqText.match(/dy\/dx\s*=\s*[\d\.\-]*\s*\*?\s*y/i)) {
+                    // Separable equation: dy/dx = ky
+                    result.steps.push("Identified as a separable equation of the form: dy/dx = ky");
+                    
+                    // Extract k
+                    const kMatch = eqText.match(/dy\/dx\s*=\s*([\d\.\-]*)?\s*\*?\s*y/i);
+                    let k = kMatch[1] ? parseFloat(kMatch[1]) || 1 : 1;
+                    
+                    result.steps.push(`Coefficient: k = ${k}`);
+                    result.steps.push("For dy/dx = ky, we can separate variables: dy/y = k·dx");
+                    result.steps.push("Integrating both sides: ln|y| = kx + C");
+                    result.steps.push("Solving for y: y = Ce^(kx)");
+                    
+                    // Apply initial condition
+                    const C = y0 / Math.exp(k * x0);
+                    result.steps.push(`Applying the initial condition y(${x0}) = ${y0} to find C = ${C.toFixed(4)}`);
+                    
+                    // Final solution
+                    result.solution = `y = ${C.toFixed(4)}e^(${k}x)`;
+                    result.latexSolution = `y = ${C.toFixed(4)}e^{${k}x}`;
+                    
+                    // Calculate y at x0
+                    const yFinal = C * Math.exp(k * x0);
+                    result.finalValue = yFinal;
+                    
+                } else {
+                    // For equations we can't solve analytically, resort to numerical method
+                    result.steps.push("The equation doesn't match known patterns for analytical solutions");
+                    result.steps.push("Falling back to numerical approximation using Euler's method");
+                    
+                    // Use Euler's method with small step size
+                    const numResult = solveWithEuler(f, x0, y0, 0.01, x0 + 1);
+                    
+                    result.finalValue = numResult.finalValue;
+                    result.solution = "Solution found numerically. See steps for details.";
+                    result.latexSolution = "\\text{Numerical approximation}";
+                    
+                    // Add numerical steps
+                    result.steps = result.steps.concat(numResult.steps);
+                }
+                
+                return result;
+            }
+            
+            function solveWithEuler(f, x0, y0, h, targetX) {
+                // Euler's method for numerical solution
+                // y_{n+1} = y_n + h*f(x_n, y_n)
+                
+                let result = {
+                    method: "Euler's Method",
+                    steps: [],
+                    values: [{x: x0, y: y0}],
+                    finalValue: null,
+                    solution: null
+                };
+                
+                result.steps.push("Applying Euler's Method with formula: y_{n+1} = y_n + h·f(x_n, y_n)");
+                result.steps.push(`Starting from initial condition: x₀ = ${x0}, y₀ = ${y0}`);
+                result.steps.push(`Using step size h = ${h}`);
+                
+                let x = x0;
+                let y = y0;
+                let step = 1;
+                
+                // Add some bounds checking to prevent infinite loops
+                const maxSteps = 1000;
+                const steps = Math.min(maxSteps, Math.ceil(Math.abs(targetX - x0) / h));
+                
+                // Determine direction of iteration
+                const direction = targetX >= x0 ? 1 : -1;
+                
+                for (let i = 0; i < steps; i++) {
+                    const fValue = f(x, y);
+                    const nextY = y + h * fValue;
+                    const nextX = x + direction * h;
+                    
+                    if (step <= 5 || i === steps - 1) {
+                        result.steps.push(`Step ${step}: At x = ${x.toFixed(4)}, y = ${y.toFixed(4)}, f(x,y) = ${fValue.toFixed(4)}`);
+                        result.steps.push(`Calculate: y_{${step}} = ${y.toFixed(4)} + ${h} · ${fValue.toFixed(4)} = ${nextY.toFixed(4)}`);
+                    } else if (step === 6) {
+                        result.steps.push("...");
+                    }
+                    
+                    result.values.push({x: nextX, y: nextY});
+                    x = nextX;
+                    y = nextY;
+                    step++;
+                }
+                
+                result.finalValue = y;
+                result.solution = `Approximate value at x = ${x.toFixed(4)} is y = ${y.toFixed(6)}`;
+                result.latexSolution = `y(${x.toFixed(4)}) \\approx ${y.toFixed(6)}`;
+                
+                return result;
+            }
+            
+            function solveWithRK4(f, x0, y0, h, targetX) {
+                // Runge-Kutta (RK4) method for numerical solution
+                // k1 = f(x_n, y_n)
+                // k2 = f(x_n + h/2, y_n + h*k1/2)
+                // k3 = f(x_n + h/2, y_n + h*k2/2)
+                // k4 = f(x_n + h, y_n + h*k3)
+                // y_{n+1} = y_n + (1/6)(k1 + 2k2 + 2k3 + k4)*h
+                
+                let result = {
+                    method: "Runge-Kutta 4th Order Method (RK4)",
+                    steps: [],
+                    values: [{x: x0, y: y0}],
+                    finalValue: null,
+                    solution: null
+                };
+                
+                result.steps.push("Applying Runge-Kutta 4th Order Method (RK4)");
+                result.steps.push(`Starting from initial condition: x₀ = ${x0}, y₀ = ${y0}`);
+                result.steps.push(`Using step size h = ${h}`);
+                result.steps.push("RK4 uses the formula:");
+                result.steps.push("k₁ = f(xₙ, yₙ)");
+                result.steps.push("k₂ = f(xₙ + h/2, yₙ + h·k₁/2)");
+                result.steps.push("k₃ = f(xₙ + h/2, yₙ + h·k₂/2)");
+                result.steps.push("k₄ = f(xₙ + h, yₙ + h·k₃)");
+                result.steps.push("yₙ₊₁ = yₙ + (h/6)·(k₁ + 2k₂ + 2k₃ + k₄)");
+                
+                let x = x0;
+                let y = y0;
+                let step = 1;
+                
+                // Add some bounds checking to prevent infinite loops
+                const maxSteps = 1000;
+                const steps = Math.min(maxSteps, Math.ceil(Math.abs(targetX - x0) / h));
+                
+                // Determine direction of iteration
+                const direction = targetX >= x0 ? 1 : -1;
+                
+                for (let i = 0; i < steps; i++) {
+                    const k1 = f(x, y);
+                    const k2 = f(x + h/2, y + h*k1/2);
+                    const k3 = f(x + h/2, y + h*k2/2);
+                    const k4 = f(x + h, y + h*k3);
+                    
+                    const nextY = y + (h/6) * (k1 + 2*k2 + 2*k3 + k4);
+                    const nextX = x + direction * h;
+                    
+                    if (step <= 3 || i === steps - 1) {
+                        result.steps.push(`Step ${step}: At x = ${x.toFixed(4)}, y = ${y.toFixed(4)}`);
+                        result.steps.push(`  k₁ = f(${x.toFixed(4)}, ${y.toFixed(4)}) = ${k1.toFixed(4)}`);
+                        result.steps.push(`  k₂ = f(${(x + h/2).toFixed(4)}, ${(y + h*k1/2).toFixed(4)}) = ${k2.toFixed(4)}`);
+                        result.steps.push(`  k₃ = f(${(x + h/2).toFixed(4)}, ${(y + h*k2/2).toFixed(4)}) = ${k3.toFixed(4)}`);
+                        result.steps.push(`  k₄ = f(${(x + h).toFixed(4)}, ${(y + h*k3).toFixed(4)}) = ${k4.toFixed(4)}`);
+                        result.steps.push(`  y_{${step}} = ${y.toFixed(4)} + (${h}/6)·(${k1.toFixed(4)} + 2·${k2.toFixed(4)} + 2·${k3.toFixed(4)} + ${k4.toFixed(4)}) = ${nextY.toFixed(4)}`);
+                    } else if (step === 4) {
+                        result.steps.push("...");
+                    }
+                    
+                    result.values.push({x: nextX, y: nextY});
+                    x = nextX;
+                    y = nextY;
+                    step++;
+                }
+                
+                result.finalValue = y;
+                result.solution = `Approximate value at x = ${x.toFixed(4)} is y = ${y.toFixed(6)}`;
+                result.latexSolution = `y(${x.toFixed(4)}) \\approx ${y.toFixed(6)}`;
+                
+                return result;
+            }
+            
+            function displaySolution(result, method) {
+                // Display solution method explanation
+                solutionMethod.innerHTML = `<h4>Method: ${result.method}</h4>`;
+                solutionMethod.innerHTML += `<p>This method ${getMethodDescription(method)}</p>`;
+                
+                // Display solution steps
+                for (const step of result.steps) {
+                    const stepDiv = document.createElement('div');
+                    stepDiv.className = 'step';
+                    stepDiv.textContent = step;
+                    solutionSteps.appendChild(stepDiv);
+                }
+                
+                // Display solution formula
+                if (result.latexSolution) {
+                    solution.innerHTML = `\\begin{align}${result.latexSolution}\\end{align}`;
+                    renderMathInElement(solution, {
+                        delimiters: [
+                            {left: '\\begin{align}', right: '\\end{align}', display: true}
+                        ]
+                    });
+                } else {
+                    solution.textContent = result.solution;
+                }
+                
+                // Display final answer
+                if (useInitialConditions.checked) {
+                    const x0 = parseFloat(initialXInput.value) || 0;
+                    finalAnswer.innerHTML = `For initial condition y(${x0}) = ${parseFloat(initialYInput.value) || 0}, `;
+                    
+                    if (method === 'analytical') {
+                        finalAnswer.innerHTML += `the solution is: <div id="finalFormula">${result.solution}</div>`;
+                    } else {
+                        const targetX = method === 'analytical' ? x0 : parseFloat(targetXInput.value) || 1;
+                        finalAnswer.innerHTML += `the value at x = ${targetX} is: <strong>y = ${result.finalValue.toFixed(6)}</strong>`;
+                    }
+                } else {
+                    if (method === 'analytical') {
+                        finalAnswer.innerHTML = `The general solution is: <div id="finalFormula">${result.solution}</div>`;
+                    } else {
+                        const targetX = parseFloat(targetXInput.value) || 1;
+                        finalAnswer.innerHTML = `The value at x = ${targetX} is: <strong>y = ${result.finalValue.toFixed(6)}</strong>`;
+                    }
+                }
+                
+                // If there's a formula in finalAnswer, render it with KaTeX
+                if (document.getElementById('finalFormula')) {
+                    renderMathInElement(document.getElementById('finalFormula'), {
+                        delimiters: [
+                            {left: '\\(', right: '\\)', display: false},
+                            {left: '\\[', right: '\\]', display: true}
+                        ]
+                    });
+                }
+                
+                // Show solution container
+                solutionContainer.classList.remove('hidden');
+            }
+            
+            function getMethodDescription(method) {
+                switch (method) {
+                    case 'analytical':
+                        return 'attempts to find an exact mathematical solution to the differential equation using calculus techniques such as separation of variables, integrating factors, or other analytical approaches. When successful, it provides an exact formula for the solution function.';
+                    case 'euler':
+                        return 'is a simple numerical approach that approximates the solution by taking small steps. It uses the derivative at each point to determine the direction and rate of change, then makes a linear approximation over each step. While not the most accurate for complex equations, it is straightforward and illustrates the concept of numerical approximation.';
+                    case 'rk4':
+                        return 'is a sophisticated numerical method that achieves higher accuracy by evaluating the derivative at four points within each step (the current point, two midpoints, and an endpoint). These evaluations are combined with specific weights to produce a more accurate approximation than simpler methods like Euler\'s method.';
+                    default:
+                        return 'provides an approximation to the solution of the differential equation.';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

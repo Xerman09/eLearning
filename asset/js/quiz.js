@@ -93,7 +93,7 @@ function renderQuestion(q, index) {
 
   const questionText = document.createElement('div');
   questionText.classList.add('question-text');
-  questionText.textContent = q.question;
+  questionText.innerHTML = q.question;
   wrapper.appendChild(questionText);
 
   const answerBox = document.createElement('div');
