@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Point Iteration Method Calculator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/katex.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+
+        .calculator-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .checkbox-input {
+            margin-bottom: 5px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+        }
+
+        .checkbox-label input {
+            margin-right: 8px;
+            width: auto;
+        }
+
+        .parsed-function {
+            background-color: #f0f8ff;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .option-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .option-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .radio-option,
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .solution-container {
+            margin-top: 30px;
+        }
+
+        .solution-steps {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .step:last-child {
+            border-bottom: none;
+        }
+
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+
+        .step-content {
+            margin-left: 15px;
+            line-height: 1.8;
+        }
+
+        .function-values-table {
+            margin: 15px 0;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .function-values-table th, 
+        .function-values-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .function-values-table th {
+            background-color: #f2f2f2;
+        }
+
+        .iteration-table {
+            margin: 20px 0;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .iteration-table th,
+        .iteration-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .iteration-table th {
+            background-color: #f2f2f2;
+        }
+
+        .result-highlight {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 25px 0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .equation-display {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .parameter-group {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .parameters-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .interval-inputs {
+            display: flex;
+            gap: 15px;
+        }
+
+        .interval-input {
+            flex: 1;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .conditional-inputs {
+            margin-top: 10px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid #3498db;
+        }
+
+        /* Make KaTeX formulas larger */
+        .katex {
+            font-size: 1.1em;
+        }
+
+        .solution-header {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .problem-box {
+            background-color: #f7f7f7;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        @media (max-width: 768px) {
+            .options-container,
+            .interval-inputs {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Fixed Point Iteration Method Calculator</h1>
+
+    <div class="calculator-container">
+        <div class="input-group">
+            <label for="function-input">Enter Function f(x) = 0:</label>
+            <input type="text" id="function-input" placeholder="e.g., x^2 - 2 or sin(x) - x/2" value="x^2 - 2">
+            <div class="parsed-function" id="parsed-function">f(x) = </div>
+        </div>
+
+        <div class="option-section">
+            <div class="checkbox-input">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="use-custom-iteration-function"> I want to enter my own iteration function φ(x)
+                </label>
+            </div>
+            
+            <div class="conditional-inputs hidden" id="iteration-function-container">
+                <label for="iteration-function-input">Enter Fixed Point Iteration Function φ(x):</label>
+                <input type="text" id="iteration-function-input" placeholder="e.g., sqrt(2) or sin(x)/2" value="sqrt(2)">
+                <div class="parsed-function" id="parsed-iteration-function">φ(x) = </div>
+            </div>
+        </div>
+
+        <div class="options-container">
+            <div class="option-group">
+                <div class="checkbox-input">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="use-custom-initial-guess" checked> I want to specify an initial guess
+                    </label>
+                </div>
+                
+                <div class="conditional-inputs" id="initial-guess-container">
+                    <label for="initial-guess">Initial Guess (x₀):</label>
+                    <input type="number" id="initial-guess" placeholder="e.g., 1" value="1.5" step="any">
+                </div>
+            </div>
+            
+            <div class="option-group">
+                <div class="checkbox-input">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="use-interval" checked> I want to specify an interval
+                    </label>
+                </div>
+                
+                <div class="conditional-inputs" id="interval-container">
+                    <div class="interval-inputs">
+                        <div class="interval-input">
+                            <label for="interval-a">Interval Start:</label>
+                            <input type="number" id="interval-a" placeholder="e.g., 1" value="1" step="any">
+                        </div>
+                        <div class="interval-input">
+                            <label for="interval-b">Interval End:</label>
+                            <input type="number" id="interval-b" placeholder="e.g., 2" value="2" step="any">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="parameters-container">
+            <div class="parameter-group">
+                <label for="tolerance">Tolerance (ε):</label>
+                <input type="number" id="tolerance" placeholder="e.g., 0.0001" value="0.0001" min="0" step="any">
+            </div>
+            <div class="parameter-group">
+                <label for="max-iterations">Max Iterations:</label>
+                <input type="number" id="max-iterations" placeholder="e.g., 100" value="10" min="1" step="1">
+            </div>
+            <div class="parameter-group">
+                <label for="decimal-digits">Decimal Digits:</label>
+                <input type="number" id="decimal-digits" placeholder="e.g., 5" value="4" min="1" max="15" step="1">
+            </div>
+        </div>
+
+        <div class="error-message" id="error-message"></div>
+
+        <button id="calculate-btn">Calculate Root</button>
+    </div>
+
+    <div class="solution-container" id="solution-container" style="display: none;">
+        <div class="solution-steps">
+            <h2 class="solution-header">Fixed Point Iteration Method Solution</h2>
+            
+            <div class="problem-box" id="problem-statement"></div>
+            
+            <div class="step">
+                <div class="step-title">Step 1: Problem Setup</div>
+                <div class="step-content" id="setup-content"></div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">Step 2: Checking Interval</div>
+                <div class="step-content" id="interval-check-content"></div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">Step 3: Iteration Process</div>
+                <div class="step-content" id="iteration-process-content"></div>
+            </div>
+            
+            <div class="result-highlight" id="result-highlight"></div>
+            
+            <div class="step">
+                <div class="step-title">Step 4: Iteration Table</div>
+                <div class="step-content" id="iteration-table-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // DOM Elements
+            const functionInput = document.getElementById('function-input');
+            const iterationFunctionInput = document.getElementById('iteration-function-input');
+            const parsedFunction = document.getElementById('parsed-function');
+            const parsedIterationFunction = document.getElementById('parsed-iteration-function');
+            const initialGuess = document.getElementById('initial-guess');
+            const intervalA = document.getElementById('interval-a');
+            const intervalB = document.getElementById('interval-b');
+            const tolerance = document.getElementById('tolerance');
+            const maxIterations = document.getElementById('max-iterations');
+            const decimalDigits = document.getElementById('decimal-digits');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const errorMessage = document.getElementById('error-message');
+            const solutionContainer = document.getElementById('solution-container');
+            const problemStatement = document.getElementById('problem-statement');
+            const setupContent = document.getElementById('setup-content');
+            const intervalCheckContent = document.getElementById('interval-check-content');
+            const iterationProcessContent = document.getElementById('iteration-process-content');
+            const resultHighlight = document.getElementById('result-highlight');
+            const iterationTableContent = document.getElementById('iteration-table-content');
+            
+            // Optional input checkboxes
+            const useCustomIterationFunction = document.getElementById('use-custom-iteration-function');
+            const useCustomInitialGuess = document.getElementById('use-custom-initial-guess');
+            const useInterval = document.getElementById('use-interval');
+            
+            // Conditional input containers
+            const iterationFunctionContainer = document.getElementById('iteration-function-container');
+            const initialGuessContainer = document.getElementById('initial-guess-container');
+            const intervalContainer = document.getElementById('interval-container');
+            
+            // Toggle conditional inputs
+            useCustomIterationFunction.addEventListener('change', function() {
+                iterationFunctionContainer.classList.toggle('hidden', !this.checked);
+            });
+            
+            useCustomInitialGuess.addEventListener('change', function() {
+                initialGuessContainer.classList.toggle('hidden', !this.checked);
+            });
+            
+            useInterval.addEventListener('change', function() {
+                intervalContainer.classList.toggle('hidden', !this.checked);
+            });
+
+            // Parse function input and display in mathematical form
+            function updateParsedFunction() {
+                try {
+                    const expression = functionInput.value.trim();
+                    if (expression) {
+                        // Convert to LaTeX
+                        const latex = '\\[f(x) = ' + math.parse(expression).toTex() + '\\]';
+                        parsedFunction.innerHTML = latex;
+                        renderMathInElement(parsedFunction);
+                        errorMessage.textContent = '';
+                    } else {
+                        parsedFunction.textContent = 'f(x) = ';
+                    }
+                } catch (error) {
+                    parsedFunction.textContent = 'f(x) = ' + functionInput.value;
+                    errorMessage.textContent = 'Invalid function syntax';
+                }
+            }
+
+            // Parse iteration function input and display
+            function updateParsedIterationFunction() {
+                try {
+                    const expression = iterationFunctionInput.value.trim();
+                    if (expression) {
+                        // Convert to LaTeX
+                        const latex = '\\[\\phi(x) = ' + math.parse(expression).toTex() + '\\]';
+                        parsedIterationFunction.innerHTML = latex;
+                        renderMathInElement(parsedIterationFunction);
+                        errorMessage.textContent = '';
+                    } else {
+                        parsedIterationFunction.textContent = 'φ(x) = ';
+                    }
+                } catch (error) {
+                    parsedIterationFunction.textContent = 'φ(x) = ' + iterationFunctionInput.value;
+                    errorMessage.textContent = 'Invalid iteration function syntax';
+                }
+            }
+
+            // Initial function parsing
+            updateParsedFunction();
+            updateParsedIterationFunction();
+
+            // Listen for input changes
+            functionInput.addEventListener('input', updateParsedFunction);
+            iterationFunctionInput.addEventListener('input', updateParsedIterationFunction);
+
+            // Generate iteration function automatically if not provided
+            function generateIterationFunction(fExpression) {
+                // Try to isolate x from f(x) = 0
+                try {
+                    // Simple case: x = g(x) forms
+                    const node = math.parse(fExpression);
+                    
+                    // If expression is in the form x^n - k, return x = k^(1/n)
+                    if (fExpression.match(/x\^(\d+)\s*-\s*(\d+(\.\d+)?)/)) {
+                        const match = fExpression.match(/x\^(\d+)\s*-\s*(\d+(\.\d+)?)/);
+                        const n = parseInt(match[1]);
+                        const k = parseFloat(match[2]);
+                        return `${k}^(1/${n})`;
+                    }
+                    
+                    // If expression is in the form x - g(x) = 0, return x = g(x)
+                    if (fExpression.includes('x - ')) {
+                        return fExpression.replace('x - ', '');
+                    }
+                    
+                    // If expression is in the form g(x) - x = 0, return x = g(x)
+                    if (fExpression.includes(' - x')) {
+                        return fExpression.replace(' - x', '');
+                    }
+                    
+                    // Default fallback: x = x - f(x)/K for some constant K
+                    return `x - (${fExpression})/2`;
+                    
+                } catch (error) {
+                    return `x - (${fExpression})/2`; // Default fallback
+                }
+            }
+
+            // Calculate button click handler
+            calculateBtn.addEventListener('click', function () {
+                errorMessage.textContent = '';
+
+                try {
+                    const fExpression = functionInput.value.trim();
+                    
+                    if (!fExpression) {
+                        throw new Error('Please enter the function f(x)');
+                    }
+                    
+                    // Create f(x) function from input
+                    const f = x => math.evaluate(fExpression, { x });
+                    
+                    // Handle iteration function
+                    let gExpression;
+                    if (useCustomIterationFunction.checked && iterationFunctionInput.value.trim()) {
+                        gExpression = iterationFunctionInput.value.trim();
+                    } else {
+                        // Auto-generate iteration function
+                        gExpression = generateIterationFunction(fExpression);
+                        iterationFunctionInput.value = gExpression;
+                        updateParsedIterationFunction();
+                    }
+                    
+                    // Create g(x) function from input or auto-generated expression
+                    const g = x => math.evaluate(gExpression, { x });
+                    
+                    // Get parameters
+                    let x0, a, b;
+                    
+                    // Get interval values if specified
+                    if (useInterval.checked) {
+                        a = parseFloat(intervalA.value);
+                        b = parseFloat(intervalB.value);
+                        
+                        if (isNaN(a) || isNaN(b)) {
+                            throw new Error('Please enter valid interval values');
+                        }
+                        
+                        if (a >= b) {
+                            throw new Error('Interval end must be greater than interval start');
+                        }
+                    } else {
+                        // Default interval if not specified
+                        a = -10;
+                        b = 10;
+                    }
+                    
+                    // Get initial guess if specified
+                    if (useCustomInitialGuess.checked) {
+                        x0 = parseFloat(initialGuess.value);
+                        
+                        if (isNaN(x0)) {
+                            throw new Error('Please enter a valid initial guess');
+                        }
+                    } else {
+                        // Default to midpoint of interval
+                        x0 = (a + b) / 2;
+                        initialGuess.value = x0;
+                    }
+                    
+                    // Get other parameters
+                    const tol = parseFloat(tolerance.value) || 0.0001;
+                    const maxIter = parseInt(maxIterations.value) || 10;
+                    const digits = parseInt(decimalDigits.value) || 4;
+
+                    // Run Fixed Point Iteration
+                    const result = fixedPointIteration(f, g, x0, tol, maxIter, digits);
+
+                    // Display results
+                    displayResults(result, f, g, fExpression, gExpression, a, b, x0, tol, digits);
+
+                } catch (error) {
+                    errorMessage.textContent = error.message || 'An error occurred';
+                }
+            });
+
+            // Fixed Point Iteration implementation
+            function fixedPointIteration(f, g, x0, tol, maxIter, digits) {
+                let iterations = [];
+                let iteration = 0;
+                let x = x0;
+                let error = Infinity;
+
+                while (iteration < maxIter && error > tol) {
+                    // Store current x
+                    const currentX = x;
+                    
+                    // Calculate f(x) for current iteration
+                    const fx = f(x);
+                    
+                    // Calculate next value using g(x)
+                    const nextX = g(x);
+                    
+                    // Calculate error
+                    error = Math.abs(nextX - currentX);
+                    
+                    // Store iteration data
+                    iterations.push({
+                        n: iteration,
+                        x: currentX,
+                        fx: fx,
+                        gx: nextX,
+                        error: error,
+                    });
+                    
+                    // Update for next iteration
+                    x = nextX;
+                    iteration++;
+                    
+                    // Check if solution is found (x_n+1 = x_n)
+                    if (error < tol) {
+                        break;
+                    }
+                }
+
+                return {
+                    root: x,
+                    finalFx: f(x),
+                    iterations: iterations,
+                    converged: error <= tol,
+                    iterationCount: iteration
+                };
+            }
+
+// Display results in the requested format with enhanced KaTeX presentation
+            function displayResults(result, f, g, fExpression, gExpression, a, b, x0, tol, digits) {
+                solutionContainer.style.display = 'block';
+                
+                // Problem statement with KaTeX
+                const latexF = math.parse(fExpression).toTex();
+                const latexG = math.parse(gExpression).toTex();
+                
+                problemStatement.innerHTML = `
+                    <p><strong>Find the root of equation $f(x) = ${latexF} = 0$ using Fixed Point Iteration method</strong></p>
+                `;
+                
+                // Method explanation with KaTeX
+                setupContent.innerHTML = `
+                    <p>For any equation $f(x) = 0$, we can transform it to the fixed point form $x = g(x)$ for iteration.</p>
+                    <div class="equation-display">
+                        Given $f(x) = ${latexF} = 0$
+                    </div>
+                    <div class="equation-display">
+                        The iteration function is $\\phi(x) = ${latexG}$
+                    </div>
+                    <div class="equation-display">
+                        Using the initial value $x_0 = ${x0.toFixed(digits)}$
+                    </div>
+                    <div class="equation-display">
+                        Tolerance $\\varepsilon = ${tol}$
+                    </div>
+                `;
+                
+                // Interval checking and initial values with KaTeX
+                const fa = f(a).toFixed(digits);
+                const fb = f(b).toFixed(digits);
+                const signCheck = fa * fb <= 0 ? 
+                    "Since $f(a) \\cdot f(b) \\leq 0$, the interval $[a, b]$ may contain a root." : 
+                    "Note: $f(a) \\cdot f(b) > 0$, which doesn't guarantee a root in the interval.";
+                
+                intervalCheckContent.innerHTML = `
+                    <p>Checking the interval $[${a}, ${b}]$:</p>
+                    <table class="function-values-table">
+                        <tr>
+                            <th>$x$</th>
+                            <th>$f(x)$</th>
+                        </tr>
+                        <tr>
+                            <td>$${a}$</td>
+                            <td>$${fa}$</td>
+                        </tr>
+                        <tr>
+                            <td>$${b}$</td>
+                            <td>$${fb}$</td>
+                        </tr>
+                    </table>
+                    <p>${signCheck}</p>
+                `;
+                
+                // Iteration process explanation with KaTeX
+                let iterationProcessHTML = `
+                    <p>We'll use the iteration formula $x_{n+1} = \\phi(x_n)$ with initial value $x_0 = ${x0.toFixed(digits)}$</p>
+                    <div class="equation-display">
+                        In each iteration:<br>
+                        $x_{n+1} = \\phi(x_n)$<br>
+                        We stop when $|x_{n+1} - x_n| < \\varepsilon$ (tolerance) or we reach maximum iterations.
+                    </div>
+                    <p><strong>Iteration steps:</strong></p>
+                `;
+                
+                // Show first few iterations in detail with KaTeX
+                const detailLimit = Math.min(3, result.iterations.length);
+                for (let i = 0; i < detailLimit; i++) {
+                    const iter = result.iterations[i];
+                    iterationProcessHTML += `
+                        <p><strong>Iteration ${i+1}:</strong></p>
+                        <div class="equation-display">
+                            $x_{${i}} = ${iter.x.toFixed(digits)}$<br>
+                            $f(x_{${i}}) = ${iter.fx.toFixed(digits)}$<br>
+                            $x_{${i+1}} = \\phi(x_{${i}}) = ${iter.gx.toFixed(digits)}$<br>
+                            $|x_{${i+1}} - x_{${i}}| = ${iter.error.toFixed(digits)}$
+                        </div>
+                    `;
+                }
+                
+                if (result.iterations.length > detailLimit) {
+                    iterationProcessHTML += `<p>Continuing this process...</p>`;
+                }
+                
+                iterationProcessContent.innerHTML = iterationProcessHTML;
+                
+                // Result highlight with KaTeX
+                const rootValue = result.root.toFixed(digits);
+                const finalFx = result.finalFx.toFixed(digits);
+                const convergedText = result.converged ? 
+                    `Converged after ${result.iterationCount} iterations with error $< ${tol}$` : 
+                    `Reached maximum iterations (${result.iterationCount}) without convergence`;
+                
+                resultHighlight.innerHTML = `
+                    <div class="equation-display">
+                        <span style="font-size: 1.2em;">Root found: $x = ${rootValue}$</span><br>
+                        <span style="font-size: 1.2em;">$f(${rootValue}) = ${finalFx}$</span><br>
+                        <span>${convergedText}</span>
+                    </div>
+                `;
+                
+                // Iteration table with KaTeX
+                let tableHTML = `
+                    <p>The complete iteration process:</p>
+                    <table class="iteration-table">
+                        <tr>
+                            <th>Iteration</th>
+                            <th>$x_n$</th>
+                            <th>$f(x_n)$</th>
+                            <th>$x_{n+1} = \\phi(x_n)$</th>
+                            <th>$|x_{n+1} - x_n|$</th>
+                        </tr>
+                `;
+                
+                result.iterations.forEach((iter, index) => {
+                    tableHTML += `
+                        <tr>
+                            <td>${index+1}</td>
+                            <td>$${iter.x.toFixed(digits)}$</td>
+                            <td>$${iter.fx.toFixed(digits)}$</td>
+                            <td>$${iter.gx.toFixed(digits)}$</td>
+                            <td>$${iter.error.toFixed(digits)}$</td>
+                        </tr>
+                    `;
+                });
+                
+                tableHTML += `</table>`;
+                
+                // Add convergence conclusion with KaTeX
+                if (result.converged) {
+                    tableHTML += `
+                        <div class="equation-display">
+                            The process converged to $x = ${result.root.toFixed(digits)}$ after ${result.iterationCount} iterations.<br>
+                            The final approximation has $f(x) = ${result.finalFx.toFixed(digits)}$
+                        </div>
+                    `;
+                } else {
+                    tableHTML += `
+                        <div class="equation-display">
+                            The process reached the maximum number of iterations (${result.iterationCount}) without meeting the tolerance criteria.<br>
+                            The final approximation is $x = ${result.root.toFixed(digits)}$ with $f(x) = ${result.finalFx.toFixed(digits)}$
+                        </div>
+                    `;
+                }
+                
+                iterationTableContent.innerHTML = tableHTML;
+                
+                // Render KaTeX for the entire solution
+                renderMathInElement(solutionContainer);
+                
+                // Scroll to solution
+                solutionContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+            // Initialize KaTeX auto-rendering
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "\\[", right: "\\]", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false }
+                ]
+            });
+        });
+    </script>
+</body>
+
+</html>

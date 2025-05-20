@@ -1,22 +1,10 @@
-const container = document.getElementById('quiz-container');
+const quizContainer = document.getElementById('quiz-container');
 
 let currentPage = parseInt(params.get('page')) || 1;
 const subjectCode = params.get('subject');
 const topicCode = params.get('topic');
 
-let filteredQuestions;
-let topicId = '';
-if (topicCode == '' || topicCode == 0) {
-  filteredQuestions = questions;
-  topicId = 'topic-0';
-} else {
-  filteredQuestions = questions.filter(q => !topicCode || q.topic == topicCode);
-  topicId = `topic-${topicCode}`;
-}
-
-document.getElementById(topicId).style.background = 'var(--firstcolor)';
-document.getElementById(topicId).style.color = 'white';
-
+const filteredQuestions = questions.filter(q => !topicCode || q.topic == topicCode);
 const questionsPerPage = 10;
 const totalPages = Math.ceil(filteredQuestions.length / questionsPerPage);
 
@@ -44,7 +32,7 @@ function createPaginationControls() {
     paginationBottom.appendChild(nextButtonBottom);
   }
 
-  container.parentElement.appendChild(paginationBottom);
+  quizContainer.parentElement.appendChild(paginationBottom);
 }
 
 function navigatePage(page) {
@@ -54,7 +42,7 @@ function navigatePage(page) {
 }
 
 function renderQuestion(q, index) {
-
+  const topicName = 'CIVIL SERVICE EXAM REVIEWER 2025';
   index = (currentPage * 10) - 10 + index;
   const wrapper = document.createElement('div');
   wrapper.classList.add('question-wrapper');
@@ -63,7 +51,7 @@ function renderQuestion(q, index) {
   const header = document.createElement('div');
   header.classList.add('question-header');
 
-    const topicTitle = document.createElement('div');
+  const topicTitle = document.createElement('div');
   topicTitle.className = 'topic-title';
   topicTitle.innerText = topicName;
   wrapper.appendChild(topicTitle);
@@ -75,38 +63,34 @@ function renderQuestion(q, index) {
 
   const topic = document.createElement('div');
   topic.classList.add('topic');
-  topic.textContent = topics[q.topic] || '';
+  topic.textContent = topics[q.topic];
   header.appendChild(topic);
 
   wrapper.appendChild(header);
 
   const questionText = document.createElement('div');
   questionText.classList.add('question-text');
-
-  if (q.type === 'MWI' && Array.isArray(q.question)) {
-    q.question.forEach(item => {
-      if (item.question) {
-        const p = document.createElement('p');
-        p.innerHTML = item.question;
-        questionText.appendChild(p);
-      } else if (item.image) {
-        const img = document.createElement('img');
-        img.src = item.image;
-        img.classList.add('q-image');
-        questionText.appendChild(img);
-        questionText.appendChild(document.createElement('br'));
-      }
-    });
+  if (typeof q.question === 'object' && q.question.image) {
+    const img = document.createElement('img');
+    img.src = q.question.image;
+    img.alt = 'Question image';
+    img.classList.add('question-image');
+    questionText.appendChild(img);
+    const text = document.createElement('div');
+    text.innerHTML = q.question.question;
+    questionText.appendChild(text);
   } else {
-    questionText.innerHTML = Array.isArray(q.question) ? q.question.map(i => i.question).join('<br>') : q.question;
+    questionText.innerHTML = q.question;
   }
-
   wrapper.appendChild(questionText);
 
   const answerBox = document.createElement('div');
   answerBox.className = 'answer-box';
 
+  let checkBtn;
+
   if (q.type === 'M' || q.type === 'MWI') {
+    const isMultiAnswer = Array.isArray(q.answer);
     const choicesBox = document.createElement('div');
     choicesBox.classList.add('choices');
     const selectedKeys = new Set();
@@ -115,12 +99,19 @@ function renderQuestion(q, index) {
     Object.entries(q.choices).forEach(([key, val]) => {
       const choice = document.createElement('div');
       choice.className = 'choice';
-      choice.innerHTML = `${key.toUpperCase()}. ${val}`;
+      choice.textContent = `${key.toUpperCase()}. ${val}`;
       choice.addEventListener('click', () => {
-        if (selectedKeys.has(key)) {
-          selectedKeys.delete(key);
-          choice.classList.remove('selected');
+        if (isMultiAnswer) {
+          if (selectedKeys.has(key)) {
+            selectedKeys.delete(key);
+            choice.classList.remove('selected');
+          } else {
+            selectedKeys.add(key);
+            choice.classList.add('selected');
+          }
         } else {
+          selectedKeys.clear();
+          Object.values(choiceElements).forEach(el => el.classList.remove('selected'));
           selectedKeys.add(key);
           choice.classList.add('selected');
         }
@@ -131,29 +122,24 @@ function renderQuestion(q, index) {
 
     wrapper.appendChild(choicesBox);
 
-    const checkBtn = document.createElement('button');
+    checkBtn = document.createElement('button');
     checkBtn.className = 'check-answer-btn';
     checkBtn.textContent = 'Check Answer';
-
     checkBtn.addEventListener('click', () => {
       if (checkBtn.textContent === 'Check Answer') {
         Object.keys(choiceElements).forEach(k => {
           choiceElements[k].style.pointerEvents = 'none';
         });
-
-        const correctAnswers = new Set(q.answer);
-        let allCorrect = selectedKeys.size === correctAnswers.size &&
-                         [...selectedKeys].every(k => correctAnswers.has(k));
-
-        Object.keys(choiceElements).forEach(k => {
-          if (correctAnswers.has(k)) {
-            choiceElements[k].classList.add('correct');
-          }
-          if (selectedKeys.has(k) && !correctAnswers.has(k)) {
-            choiceElements[k].classList.add('incorrect');
+        const correctAnswers = Array.isArray(q.answer) ? q.answer : [q.answer];
+        Object.keys(choiceElements).forEach(key => {
+          if (selectedKeys.has(key) && correctAnswers.includes(key)) {
+            choiceElements[key].classList.add('correct');
+          } else if (selectedKeys.has(key)) {
+            choiceElements[key].classList.add('incorrect');
+          } else if (correctAnswers.includes(key)) {
+            choiceElements[key].classList.add('correct');
           }
         });
-
         answerBox.innerHTML = `<div>Explanation: ${q.explanation || 'No explanation available.'}</div>`;
         answerBox.style.display = 'block';
         checkBtn.textContent = 'Hide Answer';
@@ -197,13 +183,13 @@ function renderQuestion(q, index) {
   });
 
   wrapper.appendChild(downloadBtn);
-  container.appendChild(wrapper);
+  quizContainer.appendChild(wrapper);
 }
 
 function displayQuestions() {
-  container.innerHTML = '';
+  quizContainer.innerHTML = '';
   if (filteredQuestions.length === 0) {
-    container.innerHTML = '<div class="no-questions">No questions found for this topic.</div>';
+    quizContainer.innerHTML = '<div class="no-questions">No questions found for this topic.</div>';
     return;
   }
   const start = (currentPage - 1) * questionsPerPage;
@@ -214,4 +200,8 @@ function displayQuestions() {
 
 createPaginationControls();
 displayQuestions();
-document.getElementById('warning-message').style.display = "none";
+
+const warningMessage = document.getElementById('warning-message');
+if (warningMessage) {
+  warningMessage.style.display = "none";
+}

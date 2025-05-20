@@ -22,6 +22,12 @@ export function containerContent(array, id) {
     }
 }
 
+function extractQuestionNumber(code) {
+  if (!code) return '';
+  const parts = code.split('-');
+  return parts.length > 1 ? parts[1] : code; // fallback to entire code if no dash
+}
+
 export function solEqManual(array, id){
   const params = new URLSearchParams(window.location.search);
   const code = params.get('subject');
@@ -38,7 +44,8 @@ export function solEqManual(array, id){
                   <div class="w3-right">
                   </div>
                 <div class="w3-clear"></div>
-                <h6 style="text-align:;">${i+1}. <span class="eq-math" data-latex="${array[i].eq}"></h6>
+                <h6 style="text-align:;">${extractQuestionNumber(array[i].code)}. <span class="eq-math" data-latex="${array[i].eq}"></span>
+</h6>
               </div>
             </a>
         </div>

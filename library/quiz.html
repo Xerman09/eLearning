@@ -101,6 +101,12 @@
             font-size: 1.1rem;
         }
 
+        .question img{
+            width: 100%;
+        }
+        .answer-image{
+            width: 100%;
+        }
         .question-image {
             max-width: 100%;
             border-radius: 8px;
@@ -128,7 +134,7 @@
             background-color: #e0ecff;
         }
 
-        .choice input[type="radio"] {
+        .choice input[type="radio"],.choice input[type="checkbox"] {
             display: none;
         }
 
@@ -228,7 +234,7 @@
             <br>
             <label for="num-questions" id="num-questions-label"></label>
             <br>
-            <input type="number" id="num-questions" min="1" max="12">
+            <input type="number" id="num-questions" min="1" max="12" value="10">
             <button class="start-quiz bold" id="start-quiz-button" onclick="startQuiz()">Start Quiz</button>
 
         </div>
@@ -242,9 +248,11 @@
         </style>
         <div id="quiz-container" class="hidden quiz-container">
             <div class="progress-bar" id="progress-bar"></div>
+            <br>
             <div id="question-text" class="question"></div>
             <div id="choices"></div>
-            <button onclick="submitAnswer()">Submit Answer</button>
+            <br>
+            <button onclick="submitAnswer()" id="submit-button" class="start-quiz bold">Submit Answer</button>
         </div>
         <style>
             .ct-txt{
@@ -261,7 +269,6 @@
 
 
     </div>
-    <script src="../asset/js/homeSidebar.js"></script>
 
     <script>
         // Get URL parameters
@@ -276,10 +283,6 @@
             const script = document.createElement('script');
             script.src = `../asset/js/${code}.js`;
             document.body.appendChild(script);
-
-            const scriptQuiz = document.createElement('script');
-            scriptQuiz.src = `../asset/js/practiceQuiz.js`;
-            document.body.appendChild(scriptQuiz);
         }
 
     </script>

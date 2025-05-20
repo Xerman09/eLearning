@@ -15,7 +15,7 @@ startQuizButton.onclick = () => startQuiz(qlen, 0);
 
 
 // Populate the <select> options
-Object.entries(cse_topics).forEach(([key, value]) => {
+Object.entries(topics).forEach(([key, value]) => {
     const option = document.createElement("option");
     option.value = key;
     option.innerText = value;
@@ -112,10 +112,14 @@ function submitAnswer() {
     }
     const q = selectedQuestions[currentIndex];
     const userChoice = selected.value;
-    userAnswers.push({ question: q.question, userAnswer: userChoice, correctAnswer: q.answer, explanation: q.explanation });
 
     if (userChoice === q.answer) {
         score++;
+        userAnswers.push({ question: q.question, userAnswer: userChoice, correctAnswer: q.answer, explanation: q.explanation, isCorrect: True });
+
+    }else{
+        userAnswers.push({ question: q.question, userAnswer: userChoice, correctAnswer: q.answer, explanation: q.explanation , isCorrect: False});
+
     }
 
     currentIndex++;
@@ -170,7 +174,7 @@ function showSummary() {
 
     userAnswers.forEach((item, index) => {
         resultHTML += `<li><b>Q${index + 1}:</b> ${item.question}<br>
-            Your Answer: ${item.userAnswer.toUpperCase()} ${item.userAnswer === item.correctAnswer ? '✅' : '❌'}<br>
+            Your Answer: ${item.userAnswer.toUpperCase()} ${item.isCorrect === True ? '✅' : '❌'}<br>
             Correct Answer: ${item.correctAnswer.toUpperCase()}<br>
             ${item.explanation ? `Explanation: ${item.explanation}` : ''}
             <br><br></li>`;
