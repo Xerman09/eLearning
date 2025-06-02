@@ -1,4 +1,3 @@
-
 document.getElementById('subject-title').innerText = 'CIVIL SERVICE PRACTICE EXAM';
 document.getElementById('sidebar-subject-title').innerText = 'CIVIL SERVICE PRACTICE EXAM';
 
@@ -10,8 +9,15 @@ const topics = {
     //2.1 : 'Word Meaning',
     2.2: 'Sentence Completion',
     2.3: 'Antonyms',
+    2.4: 'Error Recognition',
+    2.5: 'Synonyms',
+    2.6: 'Single Word Analogy',
     //3 : 'FILIPINO',
-    4: 'PHILIPPINE CONSTITUTION',
+    4: 'GENERAL INFORMATION',
+    4.1: 'PHILIPPINE CONSTITUTION',
+    4.2: 'R.A. 6713',
+    4.3: 'Peace and Human Rights Issues and Concepts',
+    4.4: 'Environment Management and Protection'
     //5 : 'INDUCTIVE REASONING',
     //6 : 'ABSTRACT REASONING',
     //7 : 'LOGICAL REASONING'
@@ -319,8 +325,22 @@ const questions = [
         explanation: '',
     },
     {
-        no: 4.1,
+        no : "OTH-1", 
         topic: 4,
+        type : 'M',
+        question : 'An adjective used to designate a retired professor, pastor, bishop, or other personages but allowed to retain their title as an honor',
+        choices : {
+            a : 'Senior Citizen',
+            b : 'Emeritus',
+            c : 'Retiree',
+            d : 'Charter',
+        },
+        answer : 'b',
+        explanation: '',
+    },    
+    {
+        no: 4.1,
+        topic: 4.1,
         type: 'M',
         question: 'What is the highest law of the land in the Philippines',
         choices: {
@@ -334,7 +354,7 @@ const questions = [
     },
     {
         no: 4.2,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'How many articles are there in the 1987 Philippine Constitution?',
         choices: {
@@ -348,7 +368,7 @@ const questions = [
     },
     {
         no: 4.3,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'Which branch of the government is responsible for making laws?',
         choices: {
@@ -362,7 +382,7 @@ const questions = [
     },
     {
         no: 4.4,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'The power to declare martial law is vested in which official?',
         choices: {
@@ -376,7 +396,7 @@ const questions = [
     },
     {
         no: 4.5,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'Which article of the Constitution focuses on the Bill of Rights',
         choices: {
@@ -390,7 +410,7 @@ const questions = [
     },
     {
         no: 4.6,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'Who is responsible for determining the existence of probable cause for the issuance of a warrant of arrest or search warrant?',
         choices: {
@@ -404,7 +424,7 @@ const questions = [
     },
     {
         no: 4.7,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'The Senate shall be composed of how many senators elected at large by voters of the Philippines?',
         choices: {
@@ -418,7 +438,7 @@ const questions = [
     },
     {
         no: 4.8,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'The term of office of the President and Vice-President of the Philippines shall be up to how many years?',
         choices: {
@@ -432,7 +452,7 @@ const questions = [
     },
     {
         no: 4.9,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'It states that "no person shall be deprived of life, liberty, or property without due process of law, nor any person be denied the equal protection of the laws.',
         choices: {
@@ -446,9 +466,9 @@ const questions = [
     },
     {
         no: 4.10,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
-        question: 'What are the 3 branches of the Governemnt of the Philippines?',
+        question: 'What are the 3 branches of the Government of the Philippines?',
         choices: {
             a: 'Senate, Supreme Court, Congress',
             b: 'Presidential, Unicameral - Parliamentary, Bicameral -Parliamentary',
@@ -460,7 +480,7 @@ const questions = [
     },
     {
         no: 4.11,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'The following shall be exempted from taxation except:',
         choices: {
@@ -474,7 +494,7 @@ const questions = [
     },
     {
         no: 4.12,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'It is a law in the Philippines that aims to address legal issues concerning online interactions and harmful internet behavior in the Philippines. It aims to present and punish cybercrime in the country.',
         choices: {
@@ -488,7 +508,7 @@ const questions = [
     },
     {
         no: 4.13,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'It is a project of DOST for more accurate integrated and responsive disaster prevention and mitigation system expecially in high-risk calamity areas of the Philippines',
         choices: {
@@ -502,7 +522,7 @@ const questions = [
     },
     {
         no: 4.14,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'The member of the House of Representatives shall be elected for a term of _____.',
         choices: {
@@ -516,7 +536,7 @@ const questions = [
     },
     {
         no: 4.15,
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'It is the power of the State to promote public welfare by restraining the use of both liberty and property of all people',
         choices: {
@@ -530,7 +550,7 @@ const questions = [
     },
     {
         no: "4.2025edCSC-2",
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'The legislative power shall be vested in the ______ which shall consist of a Senate and a House of Representative',
         choices: {
@@ -544,7 +564,7 @@ const questions = [
     },
     {
         no: "4.2025edCSC-3",
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'Who is the current Senate President of the Philippines?',
         choices: {
@@ -558,7 +578,7 @@ const questions = [
     },
     {
         no: "4.2025edCSC-4",
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'Who is the current Speaker of the House of Representative in the Philippines?',
         choices: {
@@ -572,7 +592,7 @@ const questions = [
     },
     {
         no: "4.2025edCSC-5",
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'Who is the current Chairperson of the House Committee on Appropriations?',
         choices: {
@@ -586,7 +606,7 @@ const questions = [
     },
     {
         no: "4.2025edCSC-6",
-        topic: 4,
+        topic: 4.1,
         type: 'M',
         question: 'The executive power shall be vested in the ____.',
         choices: {
@@ -598,6 +618,7 @@ const questions = [
         answer: 'a',
         explanation: 'According to Article VII, Section 1 of the 1987 Philippine Constitution, the executive power is vested in the President of the Philippines, who acts as the head of state and government.',
     },
+    
     {
         no: "2.R",
         topic: 2.2,
@@ -1423,13 +1444,127 @@ const questions = [
         answer: 'a',
         explanation: '"Kibitzers" are people who offer unwanted advice or commentary. The antonym is "advisers," who are expected to give advice and are usually welcomed.',
     },
+        {
+        no : "CSR-", 
+        topic: 2.4,
+        type : 'M',
+        question : `
+                <div class="error-reg">
+                    <div class="sentence">
+                        <div class="phrase">
+                            No one
+                        </div>
+                        <div class="choices">
+                            a
+                        </div>
+                    </div>
+                    <div class="sentence">
+                        <div class="phrase">
+                            were happy
+                        </div>
+                        <div class="choices">
+                            b
+                        </div>
+                    </div>
+                    the Mindanao
+                    <div class="sentence">
+                        <div class="phrase">
+                            crisis
+                        </div>
+                        <div class="choices">
+                            d
+                        </div>
+                    </div>.
+                    <div class="sentence">
+                        <div class="phrase">
+                            No error
+                        </div>
+                        <div class="choices">
+                            e
+                        </div>
+                    </div>                   
+                </div>
+            `,
+        choices : {
+            a : '',
+            b : '',
+            c : '',
+            d : '',
+        },
+        answer : '',
+        explanation: '',
+    },
 ];
 /*
     {
-        no : "2.3.", 
-        topic: 2.3,
+        no : "CSR-", 
+        topic: 2.4,
+        type : 'M',
+        question : `
+                <div class="error-reg">
+                    <div class="sentence">
+                        <div class="phrase">
+                            No one
+                        </div
+                        <div class="choices">
+                            a
+                        </div>
+                    </div>
+                    <div class="sentence">
+                        <div class="phrase">
+                            were happy
+                        </div
+                        <div class="choices">
+                            b
+                        </div>
+                    </div>
+                    the Mindanao
+                    <div class="sentence">
+                        <div class="phrase">
+                            crisis
+                        </div
+                        <div class="choices">
+                            d
+                        </div>
+                    </div>.
+                    <div class="sentence">
+                        <div class="phrase">
+                            No error
+                        </div
+                        <div class="choices">
+                            e
+                        </div>
+                    </div>                   
+                </div>
+            `,
+        choices : {
+            a : '',
+            b : '',
+            c : '',
+            d : '',
+        },
+        answer : '',
+        explanation: '',
+    },
+    {
+        no : "OTH-", 
+        topic: 4,
         type : 'M',
         question : ' <b><i> </b></i>',
+        choices : {
+            a : '',
+            b : '',
+            c : '',
+            d : '',
+        },
+        answer : '',
+        explanation: '',
+    },
+        {
+        no : "OTH-", 
+        topic: 4,
+        type : 'M',
+        question : ' ',
         choices : {
             a : '',
             b : '',
@@ -1442,6 +1577,813 @@ const questions = [
 */
 
 // Function to display questions
+
+const synonyms = [
+    {
+        no: 2,
+        topic: '2.5',
+        type: 'M',
+        question: 'It’s hard to see atoms without naked eyes because it is <b><i>infinitesimal</i></b>.',
+        choices: {
+            a: 'Invisible',
+            b: 'Interesting',
+            c: 'Microscopic',
+            d: 'Large',
+        },
+        answer: 'c',
+        explanation: 'The correct answer is (c) Microscopic. Atoms are extremely small and cannot be seen with the naked eye, hence they are described as microscopic.'
+    },
+    {
+        no: 4,
+        topic: '2.5',
+        type: 'M',
+        question: 'Political leaders must be careful not to make <b><i>disparaging</i></b> remarks that might offend the nation.',
+        choices: {
+            a: 'Scornful',
+            b: 'Praising',
+            c: 'Sycophantic',
+            d: 'Flattering',
+        },
+        answer: 'a',
+        explanation: 'The correct answer is (a) Scornful. Disparaging remarks are critical or disrespectful comments, hence scornful fits.'
+    },
+    {
+        no: 1,
+        topic: '2.5',
+        type: 'M',
+        question: 'Ana considers her crush an <b><i>epitome</i></b> of perfection.',
+        choices: {
+            a: 'Embodiment',
+            b: 'Reverse',
+            c: 'Opposite',
+            d: 'Contrast',
+        },
+        answer: 'a',
+        explanation: 'The correct answer is (a) Embodiment. An epitome means a perfect example of something, which is synonymous with embodiment.'
+    },
+    {
+        no: 10,
+        topic: '2.5',
+        type: 'M',
+        question: 'Novah’s grandmother gave her a collection of expensive vintage <b><i>tchotchkes</i></b>.',
+        choices: {
+            a: 'Books',
+            b: 'Trinkets',
+            c: 'Flowers',
+            d: 'Plants',
+        },
+        answer: 'b',
+        explanation: 'The correct answer is (b) Trinkets. Tchotchkes are small decorative objects, often collectible items like trinkets.'
+    },
+    {
+        no: 6,
+        topic: '2.5',
+        type: 'M',
+        question: 'Lily and Marshall are going to the <b><i>suburbs</i></b>, a 45-minute ride away from the city.',
+        choices: {
+            a: 'Outskirts',
+            b: 'Centers',
+            c: 'City',
+            d: 'Downtown',
+        },
+        answer: 'a',
+        explanation: 'The correct answer is (a) Outskirts. Suburbs are usually located on the outskirts of a city, away from the center.'
+    },
+    {
+        no: 3,
+        topic: '2.5',
+        type: 'M',
+        question: 'Queen Regina’s <b><i>wrath</i></b> towards Snow White led her to cursing Emma and the rest of Storybrooke.',
+        choices: {
+            a: 'Love',
+            b: 'Anger',
+            c: 'Rage',
+            d: 'Care',
+        },
+        answer: 'c',
+        explanation: 'The correct answer is (c) Rage. Wrath is intense anger, which is synonymous with rage.'
+    },
+    {
+        no: 8,
+        topic: '2.5',
+        type: 'M',
+        question: 'We should be spending our time on earth wisely, for life can be <b><i>ephemeral</i></b>.',
+        choices: {
+            a: 'Shrivel',
+            b: 'Long-lasting',
+            c: 'Beautiful',
+            d: 'Short-lived',
+        },
+        answer: 'd',
+        explanation: 'The correct answer is (d) Short-lived. Ephemeral means lasting for a short time, hence short-lived is the appropriate choice.'
+    },
+    {
+        no: 5,
+        topic: '2.5',
+        type: 'M',
+        question: 'I am still <b><i>ambivalent</i></b> on whether I should be going to the camp or not.',
+        choices: {
+            a: 'Decisive',
+            b: 'Uncertain',
+            c: 'Sure',
+            d: 'Definite',
+        },
+        answer: 'b',
+        explanation: 'The correct answer is (b) Uncertain. Ambivalent means having mixed feelings or being uncertain about something.'
+    },
+    {
+        no: 9,
+        topic: '2.5',
+        type: 'M',
+        question: 'We prayed for our lives as our car stopped at the <b><i>brink</i></b> of a cliff.',
+        choices: {
+            a: 'Edge',
+            b: 'Center',
+            c: 'Middle',
+            d: 'Inside',
+        },
+        answer: 'a',
+        explanation: 'The correct answer is (a) Edge. The brink of a cliff refers to the edge, where the car was stopped.'
+    },
+    {
+    no: 11,
+    topic: '2.5',
+    type: 'M',
+    question: 'I don’t like your <b><i>apathy</i></b> towards the present political condition of the country.',
+    choices: {
+        a: 'Interest',
+        b: 'Indifference',
+        c: 'Curiosity',
+        d: 'Awareness',
+    },
+    answer: 'b',
+    explanation: 'The correct answer is (b) Indifference. Apathy means a lack of interest, enthusiasm, or concern—similar to indifference.'
+}
+];
+
+const singleWordAnalogyQuestions = [
+    {
+        no: 13,
+        topic: 2.6,
+        type: 'M',
+        question: 'Stalagmite : Floor :: Stalactite : ______.',
+        choices: {
+            a: 'Wall',
+            b: 'Ceiling',
+            c: 'Mouth',
+            d: 'Window'
+        },
+        answer: 'b',
+        explanation: 'Stalagmites grow from the floor, stalactites hang from the ceiling.'
+    },
+    {
+        no: 7,
+        topic: 2.6,
+        type: 'M',
+        question: 'Tagbanua : Palawan :: Kankanaey : ______',
+        choices: {
+            a: 'Ilocos',
+            b: 'Cavite',
+            c: 'Benguet',
+            d: 'Cebu'
+        },
+        answer: 'c',
+        explanation: 'Tagbanua is an ethnic group in Palawan, Kankanaey is an ethnic group in Benguet.'
+    },
+    {
+        no: 17,
+        topic: 2.6,
+        type: 'M',
+        question: 'Parachute : Andre Jacques Garnerin :: Television : _____',
+        choices: {
+            a: 'John Logie Baird',
+            b: 'William Sony',
+            c: 'John Vincent Crowe',
+            d: 'Howard Aiken'
+        },
+        answer: 'a',
+        explanation: 'Andre Jacques Garnerin invented the parachute, John Logie Baird invented the television.'
+    },
+    {
+        no: 3,
+        topic: 2.6,
+        type: 'M',
+        question: 'BIR : Taxes :: DPWH : _____',
+        choices: {
+            a: 'Public Roads',
+            b: 'Houses',
+            c: 'Traffic',
+            d: 'Churches'
+        },
+        answer: 'a',
+        explanation: 'BIR is responsible for taxes, DPWH is responsible for public roads.'
+    },
+    {
+        no: 21,
+        topic: 2.6,
+        type: 'M',
+        question: 'Allied Powers : Russia :: Central Powers: _____',
+        choices: {
+            a: 'France',
+            b: 'Britain',
+            c: 'Italy',
+            d: 'Austria'
+        },
+        answer: 'd',
+        explanation: 'Russia was part of the Allied Powers, Austria was part of the Central Powers during World War I.'
+    },
+    {
+        no: 24,
+        topic: 2.6,
+        type: 'M',
+        question: 'Conspicuous : Obvious :: Hideous : _____',
+        choices: {
+            a: 'Hidden',
+            b: 'Ugly',
+            c: 'Expert in hiding',
+            d: 'Very bad.'
+        },
+        answer: 'b',
+        explanation: 'Conspicuous means obvious, hideous means ugly.'
+    },
+    {
+        no: 1,
+        topic: 2.6,
+        type: 'M',
+        question: 'Moby Dick : Herman Melville :: The Old Man and the Sea: ________',
+        choices: {
+            a: 'Charles Dickens',
+            b: 'Ernest Hemingway',
+            c: 'Charles Perrault',
+            d: 'Robert Frost'
+        },
+        answer: 'b',
+        explanation: 'Herman Melville wrote "Moby Dick" and Ernest Hemingway wrote "The Old Man and the Sea".'
+    },
+    {
+        no: 19,
+        topic: 2.6,
+        type: 'M',
+        question: 'Pythagorean Theorem : Pythagoras :: Cubic Equation : _____',
+        choices: {
+            a: 'Alfried Nobel',
+            b: 'Isaac Newton',
+            c: 'Tartaglia',
+            d: 'Rene Descartes'
+        },
+        answer: 'c',
+        explanation: 'Pythagoras is known for the Pythagorean Theorem, Tartaglia is known for the solution to the cubic equation.'
+    },
+    {
+        no: 10,
+        topic: 2.6,
+        type: 'M',
+        question: 'Mahabharata : India :: Gilgamesh : _____.',
+        choices: {
+            a: 'Assyria',
+            b: 'Sumeria',
+            c: 'Chaldea',
+            d: 'Babylon'
+        },
+        answer: 'd',
+        explanation: 'Mahabharata is an epic from India, Gilgamesh is an epic from Babylon.'
+    },
+    {
+        no: 5,
+        topic: 2.6,
+        type: 'M',
+        question: 'USA : Washington D.C. :: Philippines : ______',
+        choices: {
+            a: 'Quezon City',
+            b: 'San Juan',
+            c: 'Manila',
+            d: 'Cebu'
+        },
+        answer: 'c',
+        explanation: 'Washington D.C. is the capital of the USA, Manila is the capital of the Philippines.'
+    },
+    {
+        no: 25,
+        topic: 2.6,
+        type: 'M',
+        question: 'Nose : Nasal :: Abdomen : ______',
+        choices: {
+            a: 'Abnormal',
+            b: 'Abdominal',
+            c: 'Abominate',
+            d: 'Adenoma'
+        },
+        answer: 'b',
+        explanation: 'Nose relates to nasal, abdomen relates to abdominal.'
+    },
+    {
+        no: 12,
+        topic: 2.6,
+        type: 'M',
+        question: 'Sistine Madonna : Raphael :: Last Supper : _____',
+        choices: {
+            a: 'Michaelangelo',
+            b: 'Leonardo da Vinci',
+            c: 'Rembrandt',
+            d: 'Van Gogh'
+        },
+        answer: 'b',
+        explanation: 'Sistine Madonna was painted by Raphael, Last Supper was painted by Leonardo da Vinci.'
+    },
+    {
+        no: 14,
+        topic: 2.6,
+        type: 'M',
+        question: 'Catholic : Prist :: Moslem : _____',
+        choices: {
+            a: 'Rajah',
+            b: 'Hajji',
+            c: 'Koran',
+            d: 'Imam'
+        },
+        answer: 'd',
+        explanation: 'A Catholic religious leader is a Priest, a Moslem religious leader is an Imam.'
+    },
+    {
+        no: 6,
+        topic: 2.6,
+        type: 'M',
+        question: 'Presidential : President :: Parliamentary : _____',
+        choices: {
+            a: 'Prime Minister',
+            b: 'King',
+            c: 'House Speaker',
+            d: 'Cardinal'
+        },
+        answer: 'a',
+        explanation: 'A presidential government is led by a President, a parliamentary government is led by a Prime Minister.'
+    },
+    {
+        no: 2,
+        topic: 2.6,
+        type: 'M',
+        question: 'Confucius : China ::: Mahatma Gandhi : _____',
+        choices: {
+            a: 'India',
+            b: 'Japan',
+            c: 'Africa',
+            d: 'Philippines'
+        },
+        answer: 'a',
+        explanation: 'Confucius is from China, Mahatma Gandhi is from India.'
+    },
+    {
+        no: 16,
+        topic: 2.6,
+        type: 'M',
+        question: 'Samuel Morse : Telegraph :: Alexander Graham Bell : _____',
+        choices: {
+            a: 'Telescope',
+            b: 'Telephone',
+            c: 'Teleportation',
+            d: 'Door Bell'
+        },
+        answer: 'b',
+        explanation: 'Samuel Morse invented the telegraph, Alexander Graham Bell invented the telephone.'
+    },
+    {
+        no: 8,
+        topic: 2.6,
+        type: 'M',
+        question: 'Pyramid : Egypt :: Taj Majal : _____.',
+        choices: {
+            a: 'China',
+            b: 'Japan',
+            c: 'India',
+            d: 'Malaysia'
+        },
+        answer: 'c',
+        explanation: 'The Pyramid is in Egypt, the Taj Mahal is in India.'
+    },
+    {
+        no: 22,
+        topic: 2.6,
+        type: 'M',
+        question: 'Entourage : Attendants :: Cortege : _____',
+        choices: {
+            a: 'Procession for a saint',
+            b: 'Procession in court',
+            c: 'Funeral Procession',
+            d: 'Floral Procession'
+        },
+        answer: 'c',
+        explanation: 'An entourage is a group of attendants, a cortege is a funeral procession.'
+    },
+    {
+        no: 23,
+        topic: 2.6,
+        type: 'M',
+        question: 'Islet : Small Island : Rivulet : _____',
+        choices: {
+            a: 'Small River',
+            b: 'Small Land',
+            c: 'Small Review',
+            d: 'Small rebel'
+        },
+        answer: 'a',
+        explanation: 'An islet is a small island, a rivulet is a small river.'
+    },
+    {
+        no: 9,
+        topic: 2.6,
+        type: 'M',
+        question: 'Tigris-Euphrates : Mesopotamia :: Nile River : _____.',
+        choices: {
+            a: 'Egypt',
+            b: 'Greece',
+            c: 'Italy',
+            d: 'Spain'
+        },
+        answer: 'a',
+        explanation: 'Tigris-Euphrates rivers are in Mesopotamia, Nile River is in Egypt.'
+    },
+    {
+        no: 4,
+        topic: 2.6,
+        type: 'M',
+        question: 'Barangay : Captain :: Provincial Government : _____',
+        choices: {
+            a: 'Congressman',
+            b: 'Mayor',
+            c: 'Senator',
+            d: 'Governor'
+        },
+        answer: 'd',
+        explanation: 'A Barangay is led by a Captain, a Provincial Government is led by a Governor.'
+    },
+    {
+        no: 11,
+        topic: 2.6,
+        type: 'M',
+        question: 'Italy : Latin :: Greece : ____.',
+        choices: {
+            a: 'Gracian',
+            b: 'French',
+            c: 'Greek',
+            d: 'Greece'
+        },
+        answer: 'c',
+        explanation: 'Latin is the language of Italy, Greek is the language of Greece.'
+    },
+    {
+        no: 18,
+        topic: 2.6,
+        type: 'M',
+        question: 'Earth is the center : Ptolemy :: Sun is the center : ____.',
+        choices: {
+            a: 'Albert Einstein',
+            b: 'Aristotle',
+            c: 'Galileo',
+            d: 'Copernicus'
+        },
+        answer: 'd',
+        explanation: 'Ptolemy proposed the geocentric model (Earth-centered), Copernicus proposed the heliocentric model (Sun-centered).'
+    },
+    {
+        no: 15,
+        topic: 2.6,
+        type: 'M',
+        question: 'Gionnani Boccacio : Decameron :: Niccolo Machiavelli : _____.',
+        choices: {
+            a: 'The Little Prince',
+            b: 'Utopia',
+            c: 'The Prince',
+            d: 'Wealth of Nations'
+        },
+        answer: 'c',
+        explanation: 'Giovanni Boccaccio wrote Decameron, Niccolo Machiavelli wrote The Prince.'
+    },
+    {
+        no: 20,
+        topic: 2.6,
+        type: 'M',
+        question: 'Henry Cavendish : Hydrogen :: Henry Priestly : _______.',
+        choices: {
+            a: 'Carbonic Acid.',
+            b: 'Oxygen.',
+            c: 'Radium.',
+            d: 'Potassium.'
+        },
+        answer: 'b',
+        explanation: 'Henry Cavendish discovered hydrogen, Joseph Priestley discovered oxygen.'
+    }
+];
+
+
+// PHILIPPINE CONSTITUTION (4.1)
+const philippine_constitution = [
+    {
+        no : "OTH-2", 
+        topic: 4.1,
+        type : 'M',
+        question : 'The following are members of the Constitutional Commission Except:',
+        choices : {
+            a : 'Commission on Elections',
+            b : 'Commission on Civil Rights',
+            c : 'Commission on Audit',
+            d : 'Civil Service Commission',
+        },
+        answer : 'b',
+        explanation: 'The Constitutional Commissions are the Commission on Elections, Commission on Audit, and Civil Service Commission. There is no Commission on Civil Rights in the Philippine Constitution.',
+    },  
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'It is the power of the State to take properties for the purpose of public use upon payment of just compensation.',
+        choices : {
+            a : 'Power to Impeach',
+            b : 'Power of Taxation',
+            c : 'Power of Eminent Domain',
+            d : 'Police Power',
+        },
+        answer : 'c',
+        explanation: 'The Power of Eminent Domain allows the government to take private property for public use, provided that just compensation is given to the owner.',
+    },  
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'The "Rule of the Majority" is an unwritten law of a democratic government. For the Congress to declare the existence of a state of war or to call a constitutional convention ______ vote of all its respected members is required',
+        choices : {
+            a : 'Two-thirds minority',
+            b : 'Concurring',
+            c : 'Simple Majority',
+            d : 'Two-thirds majority',
+        },
+        answer : 'd',
+        explanation: 'A two-thirds majority vote of all members of Congress is required to declare the existence of a state of war or to call a constitutional convention, as provided in the Philippine Constitution.',
+    },    
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'The Supreme Court is composed of a Chief Justice and how many Associate Justices?',
+        choices : {
+            a : '12',
+            b : '13',
+            c : '14',
+            d : '15',
+        },
+        answer : 'c',
+        explanation: 'The Supreme Court of the Philippines is composed of a Chief Justice and 14 Associate Justices, making a total of 15 justices.',
+    }, 
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'The Commander-in-Chief of all armed forces of the Philippines is the:',
+        choices : {
+            a : 'Air Force Commander',
+            b : 'The President of the Philippines', 
+            c : 'Chief Justice',
+            d : 'AFP Chief Lieutenant General',
+        },
+        answer : 'b',
+        explanation: 'The Commander-in-Chief of all armed forces of the Philippines is the President of the Philippines, as stated in the Constitution.',
+    }, 
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'The Senate shall be composed of how many Senators?',
+        choices : {
+            a : '21',
+            b : '22',
+            c : '23',
+            d : '24',
+        },
+        answer : 'd',
+        explanation: 'The Senate of the Philippines is composed of 24 Senators, as provided in the Constitution.',
+    }, 
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'How long shall the term of office of the senators be commended?',
+        choices : {
+            a : '3 years',
+            b : '4 years',
+            c : '5 years',
+            d : '6 years',
+        },
+        answer : 'd',
+        explanation: 'The term of office for senators in the Philippines is six years, as stated in the Constitution.',
+    }, 
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'The term of office of the President and Vice President of the Phillines shall be up to how many years?',
+        choices : {
+            a : '4 years',
+            b : '5 years',
+            c : '6 years',
+            d : '7 years',
+        },
+        answer : 'c',
+        explanation: 'The term of office for both the President and Vice President of the Philippines is six years, as provided in the Constitution.',
+    }, 
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'The members of the House of Representatives are elected for a term of how many years?',
+        choices : {
+            a : '3 years',
+            b : '4 years',
+            c : '5 years',
+            d : '6 years',
+        },
+        answer : 'a',
+        explanation: 'Members of the House of Representatives in the Philippines are elected for a term of three years, as stated in the Constitution.',
+    }, 
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'The Congress, by a vote of ____ of both Houses in joint session assembled, voting separately, shall have the sole power to declare the existence of a state of war.',
+        choices : {
+            a : 'Two-thirds',
+            b : 'Three-fourths',
+            c : 'Simple Majority',
+            d : 'Unanimous',
+        },
+        answer : 'a',
+        explanation: 'The Congress of the Philippines, by a vote of two-thirds of both Houses in joint session assembled, voting separately, has the sole power to declare the existence of a state of war.',
+    }, 
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'It is the right and obligation of all citizens, who are at least 18 years of age and qualified by law, to vote in the election of the President, Vice President, Senators, Members of the House of Representatives, and other local officials.',
+        choices : {
+            a : 'Right to Suffrage',
+            b : 'Right to Vote',
+            c : 'Right to Elect',
+            d : 'Right to Choose',
+        },
+        answer : 'a',
+        explanation: 'The right and obligation of all citizens who are at least 18 years of age and qualified by law to vote in elections is known as the Right to Suffrage, as provided in the Philippine Constitution.',
+    }, 
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'The three inherent powers of the state are the following except:',
+        choices : {
+            a : 'Police Power',
+            b : 'Power of Eminent Domain',
+            c : 'Power of Taxation',
+            d : 'Power to Impeach',
+        },
+        answer : 'd',
+        explanation: 'The three inherent powers of the state are Police Power, Power of Eminent Domain, and Power of Taxation. The Power to Impeach is not considered one of the inherent powers of the state.',
+    }, 
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'It is the power of the State to promote the public welfare by restraining and regulating the use of liberty and property.',
+        choices : {
+            a : 'Power of Taxation',
+            b : 'Police Power',
+            c : 'Power of Eminent Domain',
+            d : 'Power to Impeach',
+        },
+        answer : 'b',
+        explanation: 'Police Power is the power of the State to promote public welfare by restraining and regulating the use of liberty and property. It is an inherent power of the state.',
+    }, 
+    {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'It is the power of the State to take private property for public use upon payment of just compensation.',
+        choices : {
+            a : 'Power of Taxation',
+            b : 'Police Power',
+            c : 'Power of Eminent Domain',
+            d : 'Power to Impeach',
+        },
+        answer : 'c',
+        explanation: 'The Power of Eminent Domain allows the State to take private property for public use, provided that just compensation is paid to the owner. This is one of the inherent powers of the state.',
+    }, 
+        {
+        no : "OTH-", 
+        topic: 4.1,
+        type : 'M',
+        question : 'It is the power of the State to impose charges or burdens on persons and properties, and property rights for the purpose of raising revenues to protect the people and extend public projects and services.',
+        choices : {
+            a : 'Power of Taxation',
+            b : 'Police Power',
+            c : 'Power of Eminent Domain',
+            d : 'Power to Impeach',
+        },
+        answer : 'a',
+        explanation: 'Power of Taxation is the power of the State to impose charges or burdens on persons and properties for the purpose of raising revenues to protect the people and extend public projects and services. It is one of the inherent powers of the state.',
+    }, 
+];
+
+// R.A. 6713 (4.2)
+const ra6713 = [
+    {
+        no : "OTH-3", 
+        topic: 4.2,
+        type : 'M',
+        question : 'According to R.A. 6713, what is the primary principle behind public office?',
+        choices : {
+            a : 'Public office is a privilege',
+            b : 'Public office is a source of additional income',
+            c : 'Public office is a right',
+            d : 'Public office is a public trust',
+        },
+        answer : 'd',
+        explanation: 'R.A. 6713, also known as the Code of Conduct and Ethical Standards for Public Officials and Employees, states that public office is a public trust.',
+    }, 
+];
+
+// PEACE AND HUMAN RIGHTS ISSUES AND CONCEPTS (4.3)
+const peace_and_human_rights = [
+    {
+        no : "OTH-", 
+        topic: 4.3,
+        type : 'M',
+        question : 'The practice of labeling individuals or groups (including human rights defenders) as communists or terrorists without substantial evidence is known as:',
+        choices : {
+            a : 'Green-tagging',
+            b : 'Red-tagging',
+            c : 'Blue-tagging',
+            d : 'Yellow-tagging',
+        },
+        answer : 'b',
+        explanation: 'Red-tagging is the act of labeling individuals or organizations as communists or terrorists without substantial evidence, often endangering their safety and violating their rights.',
+    },
+];
+
+// ENVIRONMENT MANAGEMENT AND PROTECTION (4.4)
+const environemnt_management = [
+    {
+        no : "OTH-4", 
+        topic: 4.4,
+        type : 'M',
+        question : 'Which of the following is a renewable source of energy?',
+        choices : {
+            a : 'Geothermal Energy',
+            b : 'Solar Energy',
+            c : 'Wind Energy',
+            d : 'All of the Above',
+        },
+        answer : 'd',
+        explanation: 'Geothermal, solar, and wind energy are all renewable sources of energy, making option D the correct answer.',
+    },  
+    {
+        no : "OTH-", 
+        topic: 4.4,
+        type : 'M',
+        question : 'PAGASA is the official government agency for weather forecasting, flood control, astronomical observations, and time service. PAGASA stands for _______?',
+        choices : {
+            a : 'Philippine Atmospheric Geophysical and Astronomical Service Association',
+            b : 'Philippine Atmospheric Geophysical and Astronomical Services Administration',
+            c : 'Philippine Atmospheric Geographical and Astronomical Services Administration',
+            d : 'Philippine Atmospheric Geological and Astronomical Service Association.',
+        },
+        answer : 'b',
+        explanation: 'PAGASA stands for Philippine Atmospheric Geophysical and Astronomical Services Administration, the official government agency for weather and related services.',
+    },  
+];
+
+// GENERAL (Not directly related to the four subtopics)
+const general = [
+    {
+        no : "OTH-", 
+        topic: 4,
+        type : 'M',
+        question : 'In literature, after the climax comes denouement which is what?',
+        choices : {
+            a : 'The rising emotions',
+            b : 'An intermission',
+            c : 'The final part of the play',
+            d : 'The opening scene',
+        },
+        answer : 'c',
+        explanation: 'The denouement is the final part of a play, movie, or narrative in which the strands of the plot are drawn together and matters are explained or resolved.',
+    },  
+    
+];
+
+questions.push(
+    ...synonyms,
+    ...singleWordAnalogyQuestions,
+    ...philippine_constitution, 
+    ...ra6713, 
+    ...peace_and_human_rights, 
+    ...environemnt_management, 
+    ...general);
 
   const topicName = 'CIVIL SERVICE EXAM REVIEWER 2025';
 
